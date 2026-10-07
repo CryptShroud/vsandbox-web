@@ -1,26 +1,301 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #faf9f7;
+  --paper-warm: #f3efe8;
+  --ink: #16130e;
+  --ink-soft: #4a443b;
+  --ink-mute: #8a8177;
+  --line: #e7e0d4;
+  --brand: #ff4d00;
+  --brand-deep: #c93a00;
+  --amber: #ff9d00;
+  --violet: #6c3df4;
+  --violet-deep: #2a1065;
+  --wa: #1fa855;
+  --card: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-brand: var(--brand);
+  --font-pixel: "IBM Plex Mono", ui-monospace, monospace;
+  --font-term: "IBM Plex Mono", ui-monospace, monospace;
+  --font-sans: "Archivo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--paper);
+  overflow-x: clip;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: clip;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Archivo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* etiquetas técnicas mono */
+.font-pixel {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.font-term {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ---------- botones ---------- */
+.pixel-btn {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: #fff;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(22, 19, 14, 0.22);
+  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.pixel-btn:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(255, 77, 0, 0.4);
+}
+.pixel-btn:active {
+  transform: translateY(0);
+}
+.pixel-btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  box-shadow: none;
+}
+.pixel-btn-ghost:hover {
+  border-color: var(--ink);
+  background: rgba(22, 19, 14, 0.04);
+  box-shadow: 0 8px 20px rgba(22, 19, 14, 0.1);
+}
+/* fantasma para paneles oscuros */
+.pixel-btn-ghostlight {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: none;
+}
+.pixel-btn-ghostlight:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.cta-pulse { animation: cta-pulse 2.6s ease-in-out infinite; }
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 10px 24px rgba(22, 19, 14, 0.22); }
+  50% { box-shadow: 0 10px 40px rgba(255, 77, 0, 0.55); }
+}
+
+/* ---------- tarjetas ---------- */
+.pixel-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 2px 10px rgba(22, 19, 14, 0.05);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.pixel-card:hover {
+  border-color: rgba(255, 77, 0, 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 44px rgba(22, 19, 14, 0.12);
+}
+.pixel-border {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--card);
+  box-shadow: 0 24px 60px rgba(22, 19, 14, 0.1);
+}
+.pixel-border-thin {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+/* ---------- pills ---------- */
+.pixel-tag {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 77, 0, 0.08);
+  border: 1px solid rgba(255, 77, 0, 0.3);
+  color: var(--brand-deep);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- barras ---------- */
+.hp-bar {
+  height: 8px;
+  background: #ece5d8;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.hp-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand), var(--amber));
+}
+
+.crt-glow { text-shadow: none; }
+
+.blink { animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: 0.35; } }
+
+.marquee-track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* retícula editorial */
+.grid-bg {
+  background-image: radial-gradient(rgba(22, 19, 14, 0.07) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+a { color: inherit; }
+
+/* ---------- motion ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-visible { opacity: 1; transform: none; }
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float-y { animation: float-y 5s ease-in-out infinite; }
+
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after { display: none; content: none; }
+
+/* titular degradado tinta → marca */
+.text-fuego {
+  background: linear-gradient(94deg, #16130e 20%, #ff4d00 60%, #6c3df4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow-fuego {
+  box-shadow:
+    0 24px 70px rgba(255, 77, 0, 0.18),
+    0 8px 28px rgba(108, 61, 244, 0.12);
+}
+
+.ed00 {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.holo { position: relative; }
+.holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 157, 0, 0.2) 44%,
+    rgba(108, 61, 244, 0.22) 56%,
+    transparent 70%
+  );
+  background-size: 280% 280%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: holo-pan 6s ease-in-out infinite;
+}
+@keyframes holo-pan {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+
+.ghost-num {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(22, 19, 14, 0.1);
+  user-select: none;
+}
+
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* tira chips eventos pasados */
+.ring-conic { position: relative; }
+.ring-conic::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 30px;
+  padding: 2px;
+  background: conic-gradient(from var(--ra, 0deg), #ff4d00, #ff9d00, #6c3df4, #ff4d00);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ring-spin 5s linear infinite;
+  pointer-events: none;
+}
+@property --ra {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes ring-spin { to { --ra: 360deg; } }
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0.6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .glitch::before, .glitch::after { display: none; }
+  .marquee-track, .animate-float-y { animation: none; }
+  .holo::after, .ring-conic::before, .cta-pulse { animation: none; }
 }
