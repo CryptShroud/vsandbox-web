@@ -1,40 +1,98 @@
-import { Breadcrumb, SectionHeader, PixelCard, Tag, PixelButton } from "@/components/pixel";
-import { sponsors } from "@/lib/data";
+import { pageMeta } from "@/lib/seo";
+import { mailto } from "@/lib/site";
+import { COMMUNITY_STATS } from "@/lib/events";
+import { SPONSOR_TIERS } from "@/lib/content";
+import { Button, Card, CheckList, Chip, IconBadge, PageHeader, Section, SectionHeading, StatBlock } from "@/components/ui";
+import { PartnersStrip } from "@/components/blocks";
+import { Reveal } from "@/components/fx";
 
-const TIERS = [
-  ["BRONCE", "$250", ["Logo en web + stickers", "Mención en stream", "2 pases meetup"]],
-  ["PLATA", "$800", ["Todo lo bronce", "Stand en villages", "Post dedicado + 5 pases"]],
-  ["ORO", "$2.5K", ["Todo lo plata", "Keynote slot + logo en badge", "Acceso a bolsa de talento"]],
+export const metadata = pageMeta({
+  title: "Patrocinadores",
+  description: "Patrocina V-SandBox y conecta tu marca con el talento de ciberseguridad de Ecuador. Paquetes Bronce, Plata y Oro.",
+  path: "/patrocinadores",
+});
+
+const WHY = [
+  { icon: "briefcase", title: "Talento", desc: "Conecta con estudiantes, pentesters y analistas antes que nadie. El paquete Oro incluye acceso a la bolsa de talento." },
+  { icon: "target", title: "Audiencia técnica", desc: "Nada de público genérico: gente que vive la ciberseguridad y decide qué herramientas usar." },
+  { icon: "heart", title: "Impacto real", desc: "El 100 % se reinvierte en la comunidad: sedes, hardware para villages, premios del CTF y café." },
 ];
 
 export default function Patrocinadores() {
   return (
-    <div>
-      <Breadcrumb trail={[["PATROCINADORES", "/patrocinadores"]]} />
-      <SectionHeader kicker="FUEL THE COMMUNITY" title="Patrocinadores" right={<PixelButton href="/contacto">▶ SER SPONSOR</PixelButton>} />
-      <PixelCard className="mb-6 text-center">
-        <p className="text-xl text-[#16130e]">El 100% va a la comunidad: salas en SF, hardware para villages, premios de CTF y café. Somos non-profit de barrio con ambición DEF CON.</p>
-      </PixelCard>
-      <div className="grid md:grid-cols-3 gap-4 mb-8">
-        {TIERS.map(([name, price, perks]) => (
-          <PixelCard key={name as string} className={name === "ORO" ? "pixel-border" : ""}>
-            <Tag>{name as string}</Tag>
-            <p className="text-3xl font-bold text-[#ff4d00] mt-2">{price}</p>
-            <ul className="mt-3 space-y-1">
-              {(perks as string[]).map((p) => <li key={p} className="text-[#16130e]">→ {p}</li>)}
-            </ul>
-          </PixelCard>
-        ))}
-      </div>
-      <SectionHeader kicker="WALL OF LOVE" title="Ya apoyan" />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {sponsors.map((s) => (
-          <PixelCard key={s.name} className="text-center !p-4">
-            <p className="font-bold text-[#16130e]">{s.name}</p>
-            <div className="mt-2"><Tag>{s.tier}</Tag></div>
-          </PixelCard>
-        ))}
-      </div>
-    </div>
+    <>
+      <PageHeader
+        eyebrow="Fuel the community"
+        title={<>Patrocina la escena hacker <span className="text-gradient">de Ecuador</span></>}
+        lead="V-SandBox reúne a la próxima generación de profesionales de ciberseguridad. Tu marca puede ser parte de cada edición, cada village y cada flag."
+        crumbs={[{ label: "Patrocinadores", href: "/patrocinadores" }]}
+        actions={
+          <>
+            <Button href={mailto("Patrocinio V-SandBox", "Hola, me interesa patrocinar V-SandBox.\n\nEmpresa:\nPaquete de interés:\nContacto:\n")} size="lg" icon="arrow-right">Solicitar propuesta</Button>
+            <Button href="#paquetes" variant="secondary" size="lg">Ver paquetes</Button>
+          </>
+        }
+      >
+        <div className="mt-14 grid grid-cols-2 gap-8 border-t border-line pt-10 md:grid-cols-4">
+          <StatBlock value="100+" label="Asistentes Ed. 00" />
+          <StatBlock value={COMMUNITY_STATS.editions} label="Ediciones" />
+          <StatBlock value={COMMUNITY_STATS.speakers} label="Ponentes" />
+          <StatBlock value="100%" label="Reinvertido" />
+        </div>
+      </PageHeader>
+
+      <PartnersStrip title="Organizaciones que ya estuvieron con nosotros" />
+
+      <Section>
+        <SectionHeading eyebrow="Por qué" title="Más que un logo en un banner" />
+        <div className="grid gap-4 md:grid-cols-3">
+          {WHY.map((w, i) => (
+            <Reveal key={w.title} delay={i * 80}>
+              <Card className="h-full p-7">
+                <IconBadge name={w.icon} />
+                <h3 className="font-display mt-6 text-xl font-semibold text-fg">{w.title}</h3>
+                <p className="mt-2 text-muted">{w.desc}</p>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      <Section id="paquetes" className="border-y border-line bg-bg-2/50">
+        <SectionHeading eyebrow="Paquetes" title="Elige tu nivel" lead="Precios en dólares. Armamos propuestas a medida para patrocinar el CTF, un village o la comunidad todo el año." center />
+        <div className="grid items-stretch gap-5 lg:grid-cols-3">
+          {SPONSOR_TIERS.map((t, i) => (
+            <Reveal key={t.name} delay={i * 80}>
+              <div className={`card relative flex h-full flex-col p-8 ${t.highlight ? "beam bg-surface lg:-translate-y-4" : ""}`}>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-2xl font-semibold text-fg">{t.name}</h3>
+                  {t.highlight && <Chip tone="brand">Recomendado</Chip>}
+                </div>
+                <p className="mt-6">
+                  <span className="font-display text-5xl font-semibold text-fg">{t.price}</span>
+                  <span className="ml-2 text-sm text-dim">USD</span>
+                </p>
+                <CheckList className="mt-8 flex-1" items={t.perks} />
+                <div className="mt-10">
+                  <Button href={mailto(`Patrocinio ${t.name} · V-SandBox`)} variant={t.highlight ? "primary" : "secondary"} className="w-full">
+                    Quiero el paquete {t.name}
+                  </Button>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      <Section>
+        <Card className="grid items-center gap-6 p-8 md:grid-cols-[1fr_auto] md:p-12">
+          <div>
+            <h2 className="font-display text-2xl font-semibold text-fg md:text-3xl">¿Prefieres algo a medida?</h2>
+            <p className="mt-2 text-muted">Premios del CTF, kits de hardware, coffee break, becas de certificación… Cuéntanos qué te interesa y lo armamos juntos.</p>
+          </div>
+          <Button href="/contacto" icon="arrow-right">Hablemos</Button>
+        </Card>
+      </Section>
+    </>
   );
 }

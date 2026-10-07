@@ -1,43 +1,64 @@
-import { Breadcrumb, SectionHeader, PixelCard, Tag, Sprite, PixelAvatar } from "@/components/pixel";
-import { members } from "@/lib/data";
+import { pageMeta } from "@/lib/seo";
+import { VALUES } from "@/lib/content";
+import { Card, Container, IconBadge, PageHeader, Section } from "@/components/ui";
+import { JoinCta } from "@/components/blocks";
+import { Reveal } from "@/components/fx";
 
-const VALUES = [
-  ["APRENDE EN PÚBLICO", "Comparte writeups, pregunta sin miedo. Aquí nadie nace root."],
-  ["HACKEA ÉTICO", "Solo labs y objetivos autorizados. El daño real = ban permanente."],
-  ["LEVANTA A OTROS", "Mentorea, revisa CVs, comparte botín. La comunidad sube junta."],
-  ["CURIOSIDAD RADICAL", "Rompe, entiende, documenta. El 'por qué' vale más que la flag."],
+export const metadata = pageMeta({
+  title: "Manifiesto",
+  description: "Por qué existe V-SandBox: una comunidad hacker en Quito que cree que la seguridad se aprende haciendo.",
+  path: "/manifiesto",
+});
+
+const LINES = [
+  "Creemos que la seguridad se aprende rompiendo cosas: en laboratorios, en CTFs y con buena gente al lado.",
+  "Creemos que el conocimiento que no se comparte no sirve. Por eso cada charla, cada reto y cada writeup es para todos.",
+  "Creemos que en Ecuador hay talento de sobra y que solo le faltaba un lugar donde encontrarse.",
+  "Creemos en hackear con ética: con permiso, con alcance y con la intención de proteger.",
 ];
 
 export default function Manifiesto() {
   return (
-    <div>
-      <Breadcrumb trail={[["MANIFIESTO", "/manifiesto"]]} />
-      <SectionHeader kicker="LORE" title="MANIFIESTO" />
-      <PixelCard className="mb-6">
-        <p className="font-pixel text-[11px] text-[#ff4d00] leading-loose">
-          SOMOS UNA COMUNIDAD DE HACKERS EN QUITO QUE CREE QUE LA SEGURIDAD SE APRENDE JUGANDO: CON LABS, CTFs Y BUENA GENTE.
-        </p>
-        <p className="text-xl text-[#4a443b] mt-4">Misión: que cualquier persona hispanohablante pase de “me hackearon” a “yo encuentro el bug” con rutas gratuitas, mentores y batallas semanales.</p>
-      </PixelCard>
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
-        {VALUES.map(([t, d]) => (
-          <PixelCard key={t}>
-            <div className="flex items-center gap-2 text-[#ff4d00]"><Sprite name="shield" size={20} /><span className="font-pixel text-[10px] text-[#16130e]">{t}</span></div>
-            <p className="text-lg text-[#4a443b] mt-2">{d}</p>
-          </PixelCard>
-        ))}
-      </div>
-      <SectionHeader kicker="NPCs" title="STAFF DE LA COMUNIDAD" />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {members.slice(0, 8).map((m) => (
-          <PixelCard key={m.nick} className="text-center">
-            <div className="flex justify-center"><PixelAvatar nick={m.nick} size={56} /></div>
-            <p className="font-pixel text-[10px] text-[#16130e] mt-3">{m.nick}</p>
-            <div className="mt-2"><Tag>{m.role}</Tag></div>
-            <p className="font-pixel text-[9px] text-[#4a443b] mt-2">LVL {m.level} · {m.country}</p>
-          </PixelCard>
-        ))}
-      </div>
-    </div>
+    <>
+      <PageHeader
+        eyebrow="Lore"
+        title="Manifiesto"
+        lead="De «me hackearon» a «yo encuentro el bug». Esa es la misión."
+        crumbs={[{ label: "Manifiesto", href: "/manifiesto" }]}
+      />
+
+      <section className="py-20 md:py-28">
+        <Container className="max-w-4xl">
+          <div className="space-y-10">
+            {LINES.map((l, i) => (
+              <Reveal key={i} delay={i * 60}>
+                <p className="font-display text-2xl font-medium leading-snug text-fg md:text-4xl">
+                  <span className="mr-3 font-mono text-base text-brand-2 md:text-lg">0{i + 1}</span>
+                  {l}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <Section className="border-y border-line bg-bg-2/50">
+        <div className="grid gap-4 md:grid-cols-2">
+          {VALUES.map(([t, d, icon], i) => (
+            <Reveal key={t} delay={i * 70}>
+              <Card className="flex h-full gap-5 p-7">
+                <IconBadge name={icon} />
+                <div>
+                  <h2 className="font-display text-xl font-semibold text-fg">{t}</h2>
+                  <p className="mt-2 text-muted">{d}</p>
+                </div>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      <JoinCta eyebrow="Si leíste hasta aquí" title="Ya eres de los nuestros." />
+    </>
   );
 }

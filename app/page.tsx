@@ -1,271 +1,309 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import Image from "next/image";
-import { PixelButton, SectionHeader, PixelCard, Tag, Ticker, Sprite, PixelAvatar } from "@/components/pixel";
-import { Countdown, ThreatLevel, Reveal, Tilt, HackConsole, XPBar } from "@/components/fx";
-import { FogDivider } from "@/components/sf";
+import Link from "next/link";
+import { SITE } from "@/lib/site";
+import { EDITIONS, SANDBOX_CON, allSpeakers, COMMUNITY_STATS } from "@/lib/events";
+import { BeforeAfter, Countdown, CountUp, HackConsole, Reveal, Tilt } from "@/components/fx";
+import { Button, Card, Chip, Container, Eyebrow, IconBadge, Section, SectionHeading, StatBlock } from "@/components/ui";
+import { EditionCard, JoinCta, PartnersStrip } from "@/components/blocks";
+import { Icon } from "@/components/icon";
 import { LogoMark } from "@/components/logo";
-import { members, events, villages, sponsors, HQ, WHATSAPP_URL } from "@/lib/data";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+const PILLARS = [
+  { icon: "mic", title: "Conferencias", desc: "Ediciones con charlas técnicas, demos en vivo y ponentes que trabajan en la trinchera.", href: "/eventos" },
+  { icon: "flag", title: "CTF", desc: "Competencias Capture The Flag por equipos, con infraestructura propia y premios reales.", href: "/ctf" },
+  { icon: "key", title: "Villages", desc: "Zonas prácticas de lockpicking, hardware, OSINT y blue team. Se aprende con las manos.", href: "/villages" },
+  { icon: "users", title: "Comunidad", desc: "Mentoría, ofertas de trabajo, writeups y gente con la que romper cosas todo el año.", href: "/comunidad" },
+];
 
 export default function Home() {
+  const speakers = allSpeakers();
+  const heroStats = [
+    { to: COMMUNITY_STATS.editions, suffix: "", label: "Ediciones" },
+    { to: COMMUNITY_STATS.peakAttendance, suffix: "+", label: "Hackers en una noche" },
+    { to: COMMUNITY_STATS.speakers, suffix: "", label: "Ponentes" },
+    { to: COMMUNITY_STATS.ctfs, suffix: "", label: "CTFs en vivo" },
+  ];
+
   return (
-    <div className="space-y-16 md:space-y-20">
-      {/* HERO editorial */}
-      <section className="grid lg:grid-cols-12 gap-8 items-center pt-4 md:pt-8">
-        <div className="lg:col-span-6">
-          <Reveal>
-            <div className="flex flex-wrap items-center gap-2 mb-5">
-              <ThreatLevel level="COMUNIDAD ACTIVA · QUITO" />
-              <Tag>EST. 2026</Tag>
+    <>
+      {/* ---------- HERO ---------- */}
+      <section className="noise relative -mt-[72px] overflow-hidden pt-[72px]">
+        <div className="absolute inset-0 bg-grid" aria-hidden />
+        <div className="orb -top-48 left-[10%] h-[520px] w-[520px] bg-brand/25" aria-hidden />
+        <div className="orb top-20 right-[-10%] h-[480px] w-[480px] bg-violet/20" aria-hidden />
+
+        <Container className="relative grid items-center gap-14 pb-20 pt-16 md:pb-28 md:pt-24 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <div className="enter">
+              <Link
+                href={`/eventos/${SANDBOX_CON.slug}`}
+                className="group inline-flex items-center gap-3 rounded-full border border-line bg-white/[0.04] py-1.5 pl-1.5 pr-4 text-sm text-muted backdrop-blur transition-colors hover:border-brand/40 hover:text-fg"
+              >
+                <span className="rounded-full bg-brand px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white">Próximo</span>
+                <BeforeAfter
+                  date={SANDBOX_CON.cfp.deadline}
+                  before={<span>Sandbox-Con 2026 · CFP abierto hasta el 19 de octubre</span>}
+                  after={<span>Sandbox-Con 2026 · 08 de noviembre · Quito</span>}
+                />
+                <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </div>
-          </Reveal>
-          <Reveal delay={100}>
-            <h1 className="text-[2.9rem] leading-[0.95] sm:text-6xl md:text-7xl font-black tracking-tight text-[#16130e]">
-              La comunidad <span className="text-fuego">hacker</span> de Quito
-            </h1>
-          </Reveal>
-          <Reveal delay={200}>
-            <p className="mt-5 text-lg md:text-xl text-[#4a443b] max-w-xl leading-relaxed">
-              CTFs, villages estilo DEF CON, meetups y una manada que rompe cosas de verdad.
-              Una comunidad hacker en Quito, chill y de puertas abiertas.
-            </p>
-          </Reveal>
-          <Reveal delay={300}>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <span className="cta-pulse rounded-full inline-flex">
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pixel-btn"
-                  style={{ background: "#1fa855", borderColor: "#1fa855" }}
-                >
-                  ✆ Unirme al grupo
-                </a>
-              </span>
-              <PixelButton href="/villages" ghost>Explorar villages</PixelButton>
+
+            <div className="enter" style={{ animationDelay: "80ms" }}>
+              <h1 className="font-display mt-8 text-[3.2rem] font-semibold leading-[0.95] text-fg sm:text-7xl lg:text-[5.6rem]">
+                La comunidad <span className="text-gradient">hacker</span> de Quito.
+              </h1>
             </div>
-          </Reveal>
-          <Reveal delay={400}>
-            <div className="mt-8 grid grid-cols-3 gap-6 max-w-md">
-              {[
-                ["2.4K", "MIEMBROS"],
-                ["38", "CTFs"],
-                ["06", "VILLAGES"],
-              ].map(([v, l]) => (
-                <div key={l}>
-                  <p className="text-3xl font-black tracking-tight">{v}</p>
-                  <p className="font-pixel text-[10px] text-[#8a8177] mt-1">{l}</p>
-                </div>
-              ))}
+            <div className="enter" style={{ animationDelay: "160ms" }}>
+              <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
+                Conferencias, CTFs, villages y meetups de ciberseguridad. De hackers para hackers: abierta, gratuita y hecha en Ecuador.
+              </p>
             </div>
-          </Reveal>
-        </div>
-        <div className="lg:col-span-6">
-          <Reveal delay={200}>
-            <Tilt max={5}>
-              <div className="relative">
-                <div className="rounded-[28px] overflow-hidden border border-[#e7e0d4] shadow-[0_32px_80px_rgba(22,19,14,0.18)] rotate-1">
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src="/foto-principal.jpg"
-                      alt="La manada completa de V-SandBox en Quito"
-                      fill
-                      priority
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover object-[center_25%]"
-                    />
-                  </div>
-                </div>
-                <div className="absolute -top-4 -left-2 sm:left-6 rotate-[-6deg] bg-[#16130e] text-white font-pixel text-[10px] px-4 py-2 rounded-full shadow-xl">
-                  ● LA MANADA · UIO
-                </div>
-                <div className="absolute -bottom-5 right-4 sm:right-8 rotate-[3deg] bg-white border border-[#e7e0d4] rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
-                  <LogoMark size={24} />
-                  <div>
-                    <p className="font-black text-sm leading-none">Sandbox-Con</p>
-                    <p className="font-pixel text-[9px] text-[#ff4d00] mt-1">08 NOV · QUITO</p>
-                  </div>
-                </div>
+            <div className="enter" style={{ animationDelay: "240ms" }}>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <Button href={SITE.whatsapp} variant="wa" size="lg">Unirme a la comunidad</Button>
+                <Button href={`/eventos/${SANDBOX_CON.slug}`} variant="secondary" size="lg" icon="arrow-right">Ver Sandbox-Con</Button>
               </div>
-            </Tilt>
-          </Reveal>
-        </div>
+            </div>
+            <div className="enter" style={{ animationDelay: "320ms" }}>
+              <dl className="mt-14 grid max-w-2xl grid-cols-2 gap-8 border-t border-line pt-8 sm:grid-cols-4">
+                {heroStats.map((s) => (
+                  <div key={s.label}>
+                    <dd className="font-display text-4xl font-semibold text-fg">
+                      <CountUp to={s.to} suffix={s.suffix} />
+                    </dd>
+                    <dt className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-dim">{s.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="enter" style={{ animationDelay: "200ms" }}>
+              <Tilt max={4}>
+                <div className="relative">
+                  <div className="absolute -inset-6 rounded-[40px] bg-gradient-to-br from-brand/30 via-transparent to-violet/30 blur-2xl" aria-hidden />
+                  <div className="card relative overflow-hidden p-2">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] sm:aspect-[4/4.2]">
+                      <Image
+                        src="/foto-principal.jpg"
+                        alt="La comunidad V-SandBox reunida en la Edición 01, en el CIESPAL"
+                        fill
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 480px"
+                        className="object-cover object-[45%_35%]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
+                        <div>
+                          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-2">Edición 01 · CIESPAL</p>
+                          <p className="font-display mt-1 text-lg font-semibold text-white">La comunidad completa</p>
+                        </div>
+                        <LogoMark size={40} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="float-y absolute -left-4 top-8 hidden rounded-2xl border border-line bg-bg/90 px-4 py-3 shadow-2xl backdrop-blur sm:block">
+                    <p className="font-mono text-[11px] text-[#4ade80]">root@vsandbox:~# id</p>
+                    <p className="font-mono text-[11px] text-muted">uid=0(root) gid=0(root)</p>
+                  </div>
+                  <div className="absolute -bottom-5 right-4 flex items-center gap-3 rounded-2xl border border-line bg-bg/90 px-4 py-3 shadow-2xl backdrop-blur sm:right-8">
+                    <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-ok text-ok" />
+                    <p className="text-sm">
+                      <span className="font-semibold text-fg">08 NOV</span> <span className="text-muted">· Sandbox-Con</span>
+                    </p>
+                  </div>
+                </div>
+              </Tilt>
+            </div>
+          </div>
+        </Container>
       </section>
 
-      <Ticker items={["SANDBOX-CON — 08 NOV · CASA DE LA CULTURA · QUITO", "CFP ABIERTO HASTA 19 OCT", "NUEVO VILLAGE: HARDWARE HACKING", "TOP PLAYER: CRYPTSHROUD LVL 42", "MEETUP MENSUAL · 2º VIERNES · LA FLORESTA", "ÚNETE POR WHATSAPP — SIN FORMULARIOS"]} />
+      <PartnersStrip />
 
-      {/* SEDE */}
-      <section>
+      {/* ---------- MAIN EVENT ---------- */}
+      <Section>
         <Reveal>
-          <PixelCard className="grid md:grid-cols-3 gap-6 items-center !p-6 md:!p-10">
-            <div className="md:col-span-2">
-              <p className="font-pixel text-[11px] text-[#ff4d00]">BASE OPERATIVA — QUITO, EC</p>
-              <h2 className="text-2xl md:text-4xl font-black tracking-tight mt-3">Hecha en Quito, abierta al mundo</h2>
-              <p className="text-lg text-[#4a443b] mt-3">Meetups presenciales en La Floresta + stream global. Si estás en Quito, ven a tocar hardware real; si no, todo se transmite y queda grabado.</p>
-              <div className="flex gap-2 flex-wrap mt-4"><Tag>{HQ.meetup.toUpperCase()}</Tag><Tag>{HQ.stream.toUpperCase()}</Tag></div>
-            </div>
-            <Tilt>
-              <div className="bg-[#f3efe8] border border-[#e7e0d4] rounded-2xl p-6">
-                <div className="flex items-center gap-2"><LogoMark size={20} /><p className="font-pixel text-[10px] text-[#ff4d00]">HQ</p></div>
-                <p className="font-extrabold text-[#16130e] mt-2 text-lg">{HQ.street}</p>
-                <p className="text-[#4a443b]">{HQ.city}</p>
-                <Link href="/eventos" className="font-pixel text-[10px] text-[#ff4d00] mt-4 inline-block hover:underline">VER CALENDARIO →</Link>
+          <div className="card beam noise relative overflow-hidden bg-surface">
+            <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
+            <div className="orb -right-20 -top-20 h-96 w-96 bg-brand/25" aria-hidden />
+            <div className="relative grid gap-12 p-6 sm:p-10 md:p-14 lg:grid-cols-2">
+              <div>
+                <div className="flex flex-wrap gap-2">
+                  <Chip tone="brand">Main event</Chip>
+                  <Chip>{SANDBOX_CON.dateLabel}</Chip>
+                </div>
+                <h2 className="font-display mt-6 text-4xl font-semibold leading-[1] text-fg md:text-6xl">
+                  Sandbox-Con <span className="text-metal">2026</span>
+                </h2>
+                <p className="mt-5 max-w-lg text-lg text-muted">{SANDBOX_CON.summary}</p>
+                <ul className="mt-8 space-y-3 text-muted">
+                  <li className="flex items-center gap-3"><Icon name="calendar" size={18} className="text-brand-2" /> {SANDBOX_CON.dateLabel} · 09:00</li>
+                  <li className="flex items-center gap-3"><Icon name="pin" size={18} className="text-brand-2" /> {SANDBOX_CON.venue}, {SANDBOX_CON.address}</li>
+                  <li className="flex items-center gap-3"><Icon name="ticket" size={18} className="text-brand-2" /> Registro y novedades en el grupo de la comunidad</li>
+                </ul>
+                <div className="mt-10 flex flex-wrap gap-3">
+                  <Button href={`/eventos/${SANDBOX_CON.slug}`} icon="arrow-right">Ver el evento</Button>
+                  <Button href="/cfp" variant="secondary">Proponer una charla</Button>
+                </div>
               </div>
-            </Tilt>
-          </PixelCard>
+              <div className="flex flex-col justify-center gap-8">
+                <div>
+                  <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-dim">Faltan</p>
+                  <Countdown target={SANDBOX_CON.start} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {SANDBOX_CON.formats.map((f) => (
+                    <div key={f.title} className="rounded-2xl border border-line bg-black/30 p-4">
+                      <Icon name={f.icon} size={20} className="text-brand-2" />
+                      <p className="mt-3 font-semibold text-fg">{f.title}</p>
+                      <p className="mt-1 text-sm text-dim">{f.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </Reveal>
-      </section>
+      </Section>
 
-      <FogDivider />
+      {/* ---------- PILARES ---------- */}
+      <Section className="!pt-0">
+        <SectionHeading eyebrow="Qué hacemos" title={<>Todo lo que pasa en <span className="text-gradient whitespace-nowrap">V-SandBox</span></>} lead="Una comunidad que se encuentra en persona, compite en serio y comparte lo que aprende." />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {PILLARS.map((p, i) => (
+            <Reveal key={p.title} delay={i * 80}>
+              <Link href={p.href} className="card card-hover spotlight group flex h-full flex-col p-7">
+                <IconBadge name={p.icon} />
+                <h3 className="font-display mt-6 text-2xl font-semibold text-fg">{p.title}</h3>
+                <p className="mt-3 flex-1 text-muted">{p.desc}</p>
+                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-2">
+                  Explorar <Icon name="arrow-right" size={16} className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
 
-      {/* BENTO: CTF + VILLAGES */}
-      <section>
-        <Reveal><SectionHeader kicker="EL HUB" title="Todo pasa aquí" right={<Link href="/villages" className="font-pixel text-[11px] text-[#ff4d00] hover:underline">VER VILLAGES →</Link>} /></Reveal>
-        <div className="grid md:grid-cols-3 gap-4">
-          <Reveal className="md:col-span-2">
-            <div className="pixel-border !bg-[#16130e] !border-[#16130e] text-white p-6 md:p-10 relative overflow-hidden h-full">
-              <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#ff4d00]/25 blur-[80px]" aria-hidden />
-              <div className="absolute -bottom-24 -left-10 w-72 h-72 rounded-full bg-[#6c3df4]/25 blur-[80px]" aria-hidden />
-              <div className="relative">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-pixel text-[10px] bg-[#ff4d00] text-white px-3 py-1.5 rounded-full">BOSS BATTLE</span>
-                  <span className="font-pixel text-[10px] text-white/60">SANDBOX-CTF · 08 NOV 2026</span>
-                </div>
-                <h3 className="text-3xl md:text-5xl font-black tracking-tight mt-4">Sandbox-Con<br />Main Event</h3>
-                <p className="text-white/70 mt-3 max-w-md">Jeopardy 48h por equipos. 500€ en premios + swag + trofeo. La calabaza encantada te espera.</p>
-                <div className="mt-6 max-w-md"><Countdown target="2026-11-08T09:00:00-05:00" /></div>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <PixelButton href="/ctf">▶ IR A LA BATALLA</PixelButton>
-                  <Link href="/ctf/ranking" className="font-pixel text-[11px] text-white/70 hover:text-white self-center">VER RANKING →</Link>
-                </div>
-              </div>
+      {/* ---------- EDICIONES ---------- */}
+      <Section className="border-t border-line bg-bg-2/50">
+        <SectionHeading
+          eyebrow="Archivo"
+          title="Ediciones pasadas"
+          lead="Cada edición es una fase de la cadena de ataque. Revive las agendas, los ponentes y las galerías."
+          action={<Button href="/eventos" variant="secondary" icon="arrow-right">Todos los eventos</Button>}
+        />
+        <div className="grid gap-6 md:grid-cols-2">
+          {EDITIONS.map((ed, i) => (
+            <Reveal key={ed.slug} delay={i * 100} className="h-full">
+              <EditionCard ed={ed} />
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* ---------- PONENTES ---------- */}
+      <Section>
+        <SectionHeading
+          eyebrow="Lineup"
+          title="Quiénes han subido al escenario"
+          lead="Investigadores, red teamers, especialistas AppSec y abogados de ciberderecho. Gente que hace, no que recita."
+          action={<Button href="/comunidad/hall-of-fame" variant="secondary" icon="arrow-right">Ver ponentes</Button>}
+        />
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {speakers.map((sp, i) => (
+            <Reveal key={sp.name} delay={(i % 5) * 60}>
+              <figure className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-line bg-surface">
+                <Image src={sp.img} alt={`Retrato de ${sp.name}`} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px" className="object-cover object-top grayscale-[40%] transition duration-700 group-hover:scale-105 group-hover:grayscale-0" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                <figcaption className="absolute inset-x-0 bottom-0 p-4">
+                  <p className="font-semibold leading-tight text-white">{sp.name}</p>
+                  <p className="mt-1 line-clamp-2 text-xs text-white/60">{sp.role}</p>
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
+          <Reveal delay={240}>
+            <Link href="/cfp" className="group flex aspect-[4/5] flex-col items-center justify-center rounded-2xl border border-dashed border-brand/40 bg-brand/[0.06] p-4 text-center transition-colors hover:bg-brand/10">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white transition-transform group-hover:scale-110">
+                <Icon name="mic" size={22} />
+              </span>
+              <p className="font-display mt-4 text-lg font-semibold text-fg">Tu charla aquí</p>
+              <p className="mt-1 text-xs text-muted">Call for Papers</p>
+            </Link>
+          </Reveal>
+        </div>
+      </Section>
+
+      {/* ---------- CONSOLA ---------- */}
+      <Section className="border-y border-line bg-bg-2/50">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <Reveal>
+            <Eyebrow>Hands-on</Eyebrow>
+            <h2 className="font-display mt-5 text-4xl font-semibold leading-[1.02] text-fg md:text-5xl">
+              No venimos a ver slides.<br />
+              <span className="text-gradient">Venimos a romper hierro.</span>
+            </h2>
+            <p className="mt-6 max-w-lg text-lg text-muted">
+              Así se ve una cadena de ataque completa en un laboratorio de entrenamiento: reconocimiento, fuzzing, credenciales y escalada a root. En los CTFs y villages, los comandos los escribes tú.
+            </p>
+            <div className="mt-8 grid max-w-md grid-cols-3 gap-6">
+              <StatBlock value="Recon" label="Fase 01" className="[&_p:first-child]:text-2xl" />
+              <StatBlock value="Exploit" label="Fase 02" className="[&_p:first-child]:text-2xl" />
+              <StatBlock value="Root" label="Fase 03" className="[&_p:first-child]:text-2xl" />
             </div>
+            <div className="mt-10"><Button href="/ctf" icon="arrow-right">Ir al CTF</Button></div>
           </Reveal>
           <Reveal delay={120}>
-            <PixelCard className="h-full flex flex-col">
-              <span className="text-[#ff4d00]"><Sprite name="key" size={30} /></span>
-              <h3 className="text-2xl font-black tracking-tight mt-3">6 villages abiertos</h3>
-              <p className="text-[#4a443b] mt-2 flex-1">Lockpick, hardware hacking, recon, blue team, cripto y social engineering. Mesas, herramientas y gente que enseña con las manos.</p>
-              <div className="flex flex-wrap gap-1.5 mt-4">
-                {villages.slice(0, 4).map((v) => <Tag key={v.slug}>{v.name.replace(" Village", "").toUpperCase()}</Tag>)}
-              </div>
-              <Link href="/villages" className="font-pixel text-[11px] text-[#ff4d00] mt-5 hover:underline">EXPLORAR →</Link>
-            </PixelCard>
+            <HackConsole />
           </Reveal>
         </div>
-      </section>
+      </Section>
 
-      {/* EVENTOS + RANKING + WHATSAPP */}
-      <section className="grid md:grid-cols-3 gap-4">
-        <div className="md:col-span-2">
-          <Reveal><SectionHeader kicker="CALENDARIO" title="Próximos eventos" right={<Link href="/eventos" className="font-pixel text-[11px] text-[#ff4d00] hover:underline">VER TODO →</Link>} /></Reveal>
-          <div className="space-y-3">
-            {events.slice(0, 3).map((e, i) => (
-              <Reveal key={e.slug} delay={i * 80}>
-                <Link href={`/eventos/${e.slug}`}>
-                  <PixelCard className="!p-4 flex items-center gap-4">
-                    <div className="bg-[#16130e] text-white rounded-xl px-3 py-2 text-center shrink-0 min-w-[64px]">
-                      <p className="font-pixel text-[10px] text-[#ff9d00]">{e.date.slice(5)}</p>
-                      <p className="font-pixel text-[8px] text-white/60">2026</p>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-extrabold text-[#16130e] truncate">{e.title}</p>
-                      <div className="flex gap-2 mt-1 flex-wrap"><Tag>{e.mode}</Tag></div>
-                    </div>
-                  </PixelCard>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-        <div>
-          <Reveal><SectionHeader kicker="TOP PLAYERS" title="Ranking" right={<Link href="/ctf/ranking" className="font-pixel text-[11px] text-[#ff4d00] hover:underline">TODO →</Link>} /></Reveal>
-          <Reveal delay={100}>
-            <div className="pixel-card divide-y divide-[#e7e0d4] overflow-hidden">
-              {members.slice(0, 5).map((m, i) => (
-                <div key={m.nick} className="flex items-center gap-3 p-3">
-                  <span className="font-pixel text-[11px] text-[#ff4d00] w-7">0{i + 1}</span>
-                  <PixelAvatar nick={m.nick} size={36} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold truncate">{m.nick}</p>
-                    <div className="mt-1"><XPBar value={Math.min(100, m.xp / 100)} delay={i * 120} /></div>
-                  </div>
-                  <span className="font-pixel text-[9px] text-[#8a8177]">LV{m.level}</span>
-                </div>
+      {/* ---------- SPONSORS ---------- */}
+      <Section>
+        <Reveal>
+          <div className="grid gap-10 overflow-hidden rounded-[32px] border border-line bg-gradient-to-br from-surface to-bg p-8 sm:p-12 lg:grid-cols-[1.2fr_1fr] lg:p-16">
+            <div>
+              <Eyebrow>Para empresas</Eyebrow>
+              <h2 className="font-display mt-5 text-4xl font-semibold leading-[1.02] text-fg md:text-5xl">
+                Pon tu marca frente al talento de ciberseguridad de Ecuador.
+              </h2>
+              <p className="mt-6 max-w-xl text-lg text-muted">
+                Estudiantes, pentesters, analistas SOC y líderes técnicos en un mismo lugar. Patrocina una edición, un village o el CTF, y conecta con la comunidad que va a proteger tu industria.
+              </p>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <Button href="/patrocinadores" icon="arrow-right">Ver paquetes</Button>
+                <Button href="/contacto" variant="secondary">Hablemos</Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 self-center">
+              {[
+                ["100+", "Asistentes en la Edición 00"],
+                [String(COMMUNITY_STATS.speakers), "Ponentes técnicos"],
+                ["3", "Paquetes de patrocinio"],
+                ["100%", "Reinvertido en la comunidad"],
+              ].map(([v, l]) => (
+                <Card key={l} className="p-6">
+                  <p className="font-display text-3xl font-semibold text-fg">{v}</p>
+                  <p className="mt-2 text-sm text-dim">{l}</p>
+                </Card>
               ))}
             </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* CONSOLA */}
-      <section className="grid md:grid-cols-5 gap-4 items-stretch">
-        <Reveal className="md:col-span-3"><HackConsole /></Reveal>
-        <Reveal delay={150} className="md:col-span-2">
-          <div className="pixel-border !bg-[#16130e] !border-[#16130e] text-white p-6 md:p-8 h-full flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#ff4d00]/20 blur-[70px]" aria-hidden />
-            <p className="font-pixel text-[11px] text-[#ff9d00] relative">CONSOLA INTERACTIVA</p>
-            <h3 className="text-2xl md:text-3xl font-black tracking-tight mt-3 relative">Toca el botón.<br />Mira el ataque.</h3>
-            <ul className="mt-4 space-y-2 text-white/70 relative">
-              <li>→ Pentest simulado paso a paso, en vivo.</li>
-              <li>→ Así se ve lo que rompemos en meetups y CTFs.</li>
-              <li>→ En los eventos harás TÚ los comandos.</li>
-            </ul>
-            <div className="mt-6 relative"><PixelButton href="/unete">QUIERO MI BADGE →</PixelButton></div>
           </div>
         </Reveal>
-      </section>
+      </Section>
 
-      {/* CFP */}
-      <section>
-        <Reveal>
-          <div className="pixel-border p-8 md:p-10 text-center relative overflow-hidden !bg-[#f1ebff] !border-[#d9ccff]">
-            <p className="font-pixel text-[11px] text-[#6c3df4] relative">CALL FOR PAPERS · CIERRE 19 OCT</p>
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight mt-3 relative">¿Rompiste algo cool?<br />Enséñalo en el main event.</h2>
-            <p className="text-lg text-[#4a443b] mt-3 relative">25 min + demos en vivo. Mentoría para primeras charlas.</p>
-            <div className="mt-6 relative"><PixelButton href="/cfp">▶ PROPONER CHARLA</PixelButton></div>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* SPONSORS */}
-      <section>
-        <Reveal><SectionHeader kicker="FUEL" title="Nos apoyan" right={<Link href="/patrocinadores" className="font-pixel text-[11px] text-[#ff4d00] hover:underline">SER SPONSOR →</Link>} /></Reveal>
-        <Reveal delay={100}>
-          <div className="flex flex-wrap gap-3">
-            {sponsors.map((s) => (
-              <div key={s.name} className="pixel-card !rounded-full px-5 py-2.5 flex items-center gap-2 hover:scale-105 transition-transform">
-                <span className="font-extrabold text-sm">{s.name}</span>
-                <Tag>{s.tier}</Tag>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </section>
-
-      {/* CTA FINAL */}
-      <section>
-        <Reveal>
-          <div className="bg-[#16130e] text-white rounded-[28px] p-8 md:p-14 text-center relative overflow-hidden">
-            <div className="absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-[#ff4d00]/20 blur-[100px]" aria-hidden />
-            <div className="absolute -bottom-24 right-1/4 w-96 h-96 rounded-full bg-[#6c3df4]/20 blur-[100px]" aria-hidden />
-            <p className="font-pixel text-[11px] text-[#ff9d00] relative">PLAYER 1 · TE ESTAMOS ESPERANDO</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-4 relative">Entra al grupo.<br />Captura tu primera flag.</h2>
-            <div className="mt-8 relative flex flex-wrap justify-center gap-3">
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pixel-btn"
-                style={{ background: "#1fa855", borderColor: "#1fa855" }}
-              >
-                ✆ UNIRME AL WHATSAPP
-              </a>
-              <Link href="/manifiesto" className="pixel-btn pixel-btn-ghostlight">Manifiesto</Link>            </div>
-            <p className="font-pixel text-[10px] text-white/50 mt-6 relative">SIN FORMULARIOS · QUITO + MUNDO</p>
-          </div>
-        </Reveal>
-      </section>
-    </div>
+      <JoinCta />
+    </>
   );
 }

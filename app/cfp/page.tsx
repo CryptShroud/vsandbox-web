@@ -1,52 +1,85 @@
-"use client";
+import { pageMeta } from "@/lib/seo";
+import { SANDBOX_CON } from "@/lib/events";
+import { Card, CheckList, Chip, PageHeader, Section } from "@/components/ui";
+import { CfpForm } from "@/components/cfp-form";
+import { TRACKS } from "@/lib/content";
+import { Reveal } from "@/components/fx";
+import { Icon } from "@/components/icon";
 
-import { useState } from "react";
-import { Breadcrumb, SectionHeader, PixelCard, Tag } from "@/components/pixel";
+export const metadata = pageMeta({
+  title: "Call for Papers",
+  description: `Propón tu charla para ${SANDBOX_CON.name}: 25 minutos + Q&A, demos en vivo y mentoría para primeras charlas. Cierre: ${SANDBOX_CON.cfp.deadlineLabel}.`,
+  path: "/cfp",
+});
 
-const TRACKS = ["Web Hacking", "Blue Team / Defensa", "OSINT & Recon", "Hardware & RF", "Cripto & Privacidad", "Carrera & Comunidad"];
+const DATES: [string, string, string][] = [
+  ["Cierre del CFP", SANDBOX_CON.cfp.deadlineLabel, "calendar"],
+  ["Respuestas", SANDBOX_CON.cfp.resultsLabel, "mail"],
+  ["Main event", `${SANDBOX_CON.dateLabel} · ${SANDBOX_CON.venue}`, "mic"],
+];
 
 export default function Cfp() {
-  const [sent, setSent] = useState(false);
   return (
-    <div>
-      <Breadcrumb trail={[["EVENTOS", "/eventos"], ["CALL FOR PAPERS", "/cfp"]]} />
-      <SectionHeader kicker="TU CHARLA · 25 MIN + 5 Q&A" title="Call for Papers" />
-      <div className="grid md:grid-cols-2 gap-4 mb-6">
-        <PixelCard>
-          <Tag>FECHAS CLAVE</Tag>
-          <ul className="mt-3 space-y-2 text-lg">
-            <li><span className="text-[#ff4d00]">→ Cierre CFP:</span> <span className="text-[#16130e]">19 oct 2026</span></li>
-            <li><span className="text-[#ff4d00]">→ Respuestas:</span> <span className="text-[#16130e]">26 oct 2026</span></li>
-            <li><span className="text-[#ff4d00]">→ Main event:</span> <span className="text-[#16130e]">8 nov 2026 · Casa de la Cultura, Quito</span></li>
-          </ul>
-        </PixelCard>
-        <PixelCard>
-          <Tag>QUÉ BUSCAMOS</Tag>
-          <ul className="mt-3 space-y-2 text-lg text-[#16130e]">
-            <li>→ Demos en vivo (romper cosas en directo = amor).</li>
-            <li>→ Primeras charlas bienvenidas: hay mentoría de speakers.</li>
-            <li>→ Nada de pitches de producto. Ven a compartir, chill.</li>
-          </ul>
-        </PixelCard>
-      </div>
-      <PixelCard>
-        <p className="font-pixel text-[10px] text-[#ff4d00] mb-4">TRACKS</p>
-        <div className="flex gap-2 flex-wrap mb-6">{TRACKS.map((t) => <Tag key={t}>{t.toUpperCase()}</Tag>)}</div>
-        {sent ? (
-          <div className="pixel-border-thin bg-[#f3efe8] p-6 text-center">
-            <p className="font-pixel text-xs text-[#16a34a]">✓ PROPUESTA RECIBIDA</p>
-            <p className="text-lg text-[#4a443b] mt-2">Revisamos cada propuesta a mano. Te escribimos antes del 26 oct.</p>
+    <>
+      <PageHeader
+        eyebrow={`${SANDBOX_CON.name} · 25 min + 5 de Q&A`}
+        title={<>Call for <span className="text-gradient">Papers</span></>}
+        lead="¿Rompiste algo interesante? Queremos verlo en el escenario. Demos en vivo antes que slides, y mentoría si es tu primera charla."
+        crumbs={[{ label: "Eventos", href: "/eventos" }, { label: "Call for Papers", href: "/cfp" }]}
+      />
+
+      <Section>
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.6fr]">
+          <div className="space-y-6">
+            <Reveal>
+              <Card className="p-7">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-dim">Fechas clave</p>
+                <ol className="mt-5 space-y-5">
+                  {DATES.map(([k, v, icon]) => (
+                    <li key={k} className="flex gap-4">
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-line bg-white/[0.03] text-brand-2"><Icon name={icon} size={18} /></span>
+                      <div>
+                        <p className="text-sm text-dim">{k}</p>
+                        <p className="font-semibold text-fg">{v}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </Card>
+            </Reveal>
+            <Reveal delay={80}>
+              <Card className="p-7">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-dim">Qué buscamos</p>
+                <CheckList
+                  className="mt-5"
+                  items={[
+                    "Demos en vivo: romper cosas en directo es lo nuestro.",
+                    "Investigación propia, casos reales y lecciones aprendidas.",
+                    "Primeras charlas bienvenidas, con mentoría incluida.",
+                    "Nada de pitches de producto. Venimos a compartir.",
+                  ]}
+                />
+              </Card>
+            </Reveal>
+            <Reveal delay={160}>
+              <Card className="p-7">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-dim">Tracks</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {TRACKS.map((t) => <Chip key={t}>{t}</Chip>)}
+                </div>
+              </Card>
+            </Reveal>
           </div>
-        ) : (
-          <form className="grid gap-4 md:grid-cols-2" onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
-            <input required placeholder="Tu nick *" className="bg-white border border-[#e7e0d4] rounded-xl p-3 text-lg text-[#16130e] outline-none focus:border-[#ff4d00]" />
-            <input required type="email" placeholder="tu@email.com *" className="bg-white border border-[#e7e0d4] rounded-xl p-3 text-lg text-[#16130e] outline-none focus:border-[#ff4d00]" />
-            <input required placeholder="Título de la charla *" className="md:col-span-2 bg-white border border-[#e7e0d4] rounded-xl p-3 text-lg text-[#16130e] outline-none focus:border-[#ff4d00]" />
-            <textarea required rows={4} placeholder="Abstract: qué romperás en vivo y qué se llevará el público *" className="md:col-span-2 bg-white border border-[#e7e0d4] rounded-xl p-3 text-lg text-[#16130e] outline-none focus:border-[#ff4d00]" />
-            <div className="md:col-span-2"><button className="pixel-btn w-full text-center" type="submit">▶ ENVIAR PROPUESTA</button></div>
-          </form>
-        )}
-      </PixelCard>
-    </div>
+
+          <Reveal delay={100}>
+            <div className="card beam bg-surface p-6 md:p-10">
+              <h2 className="font-display text-3xl font-semibold text-fg">Envía tu propuesta</h2>
+              <p className="mt-2 mb-8 text-muted">Revisamos cada propuesta a mano y respondemos a todas.</p>
+              <CfpForm deadline={SANDBOX_CON.cfp.deadline} deadlineLabel={SANDBOX_CON.cfp.deadlineLabel} />
+            </div>
+          </Reveal>
+        </div>
+      </Section>
+    </>
   );
 }

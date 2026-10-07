@@ -1,92 +1,83 @@
 import Link from "next/link";
-import { Breadcrumb, SectionHeader, PixelCard, Tag } from "@/components/pixel";
+import { pageMeta } from "@/lib/seo";
+import { SITE } from "@/lib/site";
+import { Button, Card, IconBadge, PageHeader, Section, SectionHeading } from "@/components/ui";
 import { Reveal } from "@/components/fx";
 import { LogoMark } from "@/components/logo";
-import { WHATSAPP_URL } from "@/lib/data";
+import { Icon } from "@/components/icon";
 
-const STEPS = [
-  ["01", "Elige tu nick", "Piensa tu alias hacker. Sin exámenes ni elitismo: todos empiezan en LVL 1."],
-  ["02", "Entra al WhatsApp", "Toca el botón verde, únete al grupo y preséntate con tu nick + qué quieres aprender."],
-  ["03", "Captura tu 1ª flag", "Participa en el próximo CTF o village y presume tu hazaña. Subes a LVL 2."],
+export const metadata = pageMeta({
+  title: "Únete",
+  description: "Únete a V-SandBox en 30 segundos: entra al grupo de WhatsApp de la comunidad de ciberseguridad de Quito.",
+  path: "/unete",
+});
+
+const STEPS: [string, string, string][] = [
+  ["01", "Entra al grupo", "Un toque en el botón verde y estás dentro. Sin formularios ni exámenes."],
+  ["02", "Preséntate", "Tu nombre o nick y qué quieres aprender. Así te conectamos con la gente correcta."],
+  ["03", "Ven al próximo evento", "Un meetup, una edición o un CTF. Ahí empieza lo bueno."],
 ];
 
 const NEXT = [
-  ["/villages", "VILLAGES", "Lockpick, hardware, OSINT… toca todo con tus manos."],
-  ["/eventos", "EVENTOS", "Meetups en Quito + stream. Lleva laptop y ganas."],
-  ["/ctf", "CTF", "Sandbox-Con 08 NOV. Arma tu equipo en el grupo."],
-] as const;
+  { href: "/eventos", title: "Eventos", desc: "Sandbox-Con, meetups y el archivo de ediciones.", icon: "calendar" },
+  { href: "/ctf", title: "CTF", desc: "Arma tu equipo y captura tu primera flag.", icon: "flag" },
+  { href: "/villages", title: "Villages", desc: "Lockpicking, hardware y OSINT con tus manos.", icon: "key" },
+];
 
 export default function Unete() {
   return (
-    <div>
-      <Breadcrumb trail={[["ÚNETE", "/unete"]]} />
-      <SectionHeader kicker="EMPIEZA AQUÍ" title="Únete en 30 segundos" />
+    <>
+      <PageHeader eyebrow="Empieza aquí" title="Únete en 30 segundos" crumbs={[{ label: "Únete", href: "/unete" }]} />
 
-      <Reveal>
-        <div className="pixel-border glow-fuego relative overflow-hidden mb-10">
-          <div
-            className="absolute inset-0 animate-gradient"
-            style={{ background: "linear-gradient(120deg, rgba(255,77,0,0.10), rgba(108,61,244,0.10), rgba(255,77,0,0.10))", backgroundSize: "200% 200%" }}
-            aria-hidden
-          />
-          <div className="relative p-8 md:p-14 text-center">
-            <div className="flex items-center justify-center gap-3">
-              <span className="animate-float-y"><LogoMark size={36} /></span>
-              <p className="font-pixel text-[11px] text-[#16a34a]">● TODO PASA EN EL GRUPO</p>
-              <span className="animate-float-y" style={{ animationDelay: "1.4s" }}><LogoMark size={36} /></span>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight mt-5">
-              Sin formularios.<br />
-              <span className="text-fuego">Un toque y estás dentro.</span>
-            </h2>
-            <p className="text-lg text-[#4a443b] mt-4 max-w-xl mx-auto">
-              Eventos, CTFs, villages, ayuda y memes: toda la comunidad vive en WhatsApp.
-            </p>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pixel-btn cta-pulse mt-8 !text-sm"
-              style={{ background: "#1fa855", borderColor: "#1fa855" }}
-            >
-              ✆ UNIRME AL WHATSAPP
-            </a>
-            <p className="font-pixel text-[10px] text-[#8a8177] mt-4">GRUPO PRINCIPAL · QUITO + MUNDO</p>
-          </div>
-        </div>
-      </Reveal>
-
-      <div className="grid md:grid-cols-3 gap-4 mb-12">
-        {STEPS.map(([k, t, d], i) => (
-          <Reveal key={k} delay={i * 100}>
-            <PixelCard className="h-full">
-              <div className="flex items-center justify-between">
-                <span className="text-4xl font-black text-[#e7e0d4]">{k}</span>
-                <Tag>PASO {k}</Tag>
+      <Section>
+        <Reveal>
+          <div className="card beam noise relative overflow-hidden bg-surface px-6 py-16 text-center md:px-16 md:py-20">
+            <div className="absolute inset-0 bg-grid opacity-60" aria-hidden />
+            <div className="orb left-1/2 top-0 h-80 w-[600px] -translate-x-1/2 bg-wa/15" aria-hidden />
+            <div className="relative mx-auto max-w-2xl">
+              <LogoMark size={72} className="float-y mx-auto" />
+              <p className="mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-[#6ee7a0]">
+                <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-wa text-wa" /> Todo pasa en el grupo
+              </p>
+              <h2 className="font-display mt-5 text-4xl font-semibold leading-[1.02] text-fg md:text-6xl">
+                Sin formularios.<br /><span className="text-gradient">Un toque y estás dentro.</span>
+              </h2>
+              <p className="mt-6 text-lg text-muted">Eventos, CTFs, ayuda, ofertas de trabajo y memes: la comunidad vive en WhatsApp.</p>
+              <div className="mt-10">
+                <Button href={SITE.whatsapp} variant="wa" size="lg">Unirme al grupo de WhatsApp</Button>
               </div>
-              <h3 className="text-xl font-extrabold mt-3">{t}</h3>
-              <p className="text-[#4a443b] mt-1">{d}</p>
-            </PixelCard>
-          </Reveal>
-        ))}
-      </div>
+            </div>
+          </div>
+        </Reveal>
 
-      <Reveal>
-        <SectionHeader kicker="DESPUÉS DEL GRUPO" title="Tus primeras quests" />
-      </Reveal>
-      <div className="grid md:grid-cols-3 gap-4">
-        {NEXT.map(([href, title, desc], i) => (
-          <Reveal key={href} delay={i * 100}>
-            <Link href={href}>
-              <PixelCard className="text-center h-full">
-                <div className="flex justify-center"><LogoMark size={30} /></div>
-                <p className="font-pixel text-[11px] mt-4"><span className="text-fuego">{title}</span></p>
-                <p className="text-[#4a443b] mt-2">{desc}</p>
-              </PixelCard>
-            </Link>
-          </Reveal>
-        ))}
-      </div>
-    </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {STEPS.map(([k, t, d], i) => (
+            <Reveal key={k} delay={i * 80}>
+              <Card className="h-full p-7">
+                <span className="font-display text-5xl font-semibold text-white/10">{k}</span>
+                <h3 className="font-display mt-4 text-xl font-semibold text-fg">{t}</h3>
+                <p className="mt-2 text-muted">{d}</p>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      <Section className="border-t border-line bg-bg-2/50">
+        <SectionHeading eyebrow="Después del grupo" title="Tus primeras quests" />
+        <div className="grid gap-4 md:grid-cols-3">
+          {NEXT.map((n, i) => (
+            <Reveal key={n.href} delay={i * 80}>
+              <Link href={n.href} className="card card-hover spotlight group flex h-full flex-col p-7">
+                <IconBadge name={n.icon} />
+                <h3 className="font-display mt-6 text-xl font-semibold text-fg">{n.title}</h3>
+                <p className="mt-2 flex-1 text-muted">{n.desc}</p>
+                <Icon name="arrow-right" size={18} className="mt-6 text-brand-2 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+    </>
   );
 }

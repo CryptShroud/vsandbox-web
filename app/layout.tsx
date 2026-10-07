@@ -1,48 +1,69 @@
-import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { LanguageProvider } from "@/lib/i18n";
-import { Navbar, Footer } from "@/components/layout";
-import { KonamiEgg } from "@/components/fx";
+import { SITE } from "@/lib/site";
+import { jsonLd } from "@/lib/seo";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { KonamiEgg, SpotlightTracker } from "@/components/fx";
 
-const display = Archivo({ weight: ["500", "700", "800", "900"], subsets: ["latin"], variable: "--font-display" });
-const plexmono = IBM_Plex_Mono({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-plexmono" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grotesk", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://community.vultaethel.com"),
+  metadataBase: new URL(SITE.url),
   title: {
-    default: "V-SandBox — Comunidad de Ciberseguridad en Quito",
-    template: "%s · V-SandBox",
+    default: `${SITE.name}: comunidad de ciberseguridad en Quito`,
+    template: `%s · ${SITE.name}`,
   },
-  description: "Comunidad hacker de Quito, Ecuador: CTFs, villages, eventos y comunidad.",
-  icons: { icon: "/logo/logotipo.png", apple: "/logo/logotipo.png" },
-  alternates: { canonical: "/" },
+  description: SITE.description,
+  applicationName: SITE.fullName,
+  keywords: ["ciberseguridad", "hacking", "CTF", "Quito", "Ecuador", "comunidad", "pentesting", "conferencia", "V-SandBox"],
   openGraph: {
     type: "website",
     locale: "es_EC",
-    siteName: "V-SandBox",
-    title: "V-SandBox — Comunidad de Ciberseguridad en Quito",
-    description: "Aprende, compite y comparte: CTFs, villages estilo DEF CON y meetups en Quito.",
-    images: [{ url: "/og-v-sandbox.png", width: 865, height: 289, alt: "V-SandBox community" }],
+    siteName: SITE.fullName,
+    title: `${SITE.name}: comunidad de ciberseguridad en Quito`,
+    description: SITE.description,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "V-SandBox — Comunidad de Ciberseguridad en Quito",
-    description: "Aprende, compite y comparte: CTFs, villages estilo DEF CON y meetups en Quito.",
-    images: ["/og-v-sandbox.png"],
-  },
+  twitter: { card: "summary_large_image" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#07070a",
+  colorScheme: "dark",
+};
+
+const ORG_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE.fullName,
+  url: SITE.url,
+  logo: `${SITE.url}/logo/logotipo.png`,
+  email: SITE.email,
+  description: SITE.description,
+  foundingDate: String(SITE.founded),
+  address: { "@type": "PostalAddress", streetAddress: SITE.hq.street, addressLocality: "Quito", postalCode: SITE.hq.postalCode, addressCountry: "EC" },
+  parentOrganization: { "@type": "Organization", name: SITE.organizer.name, url: SITE.organizer.url },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${display.variable} ${plexmono.variable}`}>
-      <body className="min-h-screen flex flex-col grid-bg font-sans">
-        <LanguageProvider>
-          <Navbar />
-          <main className="flex-1 w-full mx-auto max-w-6xl px-4 py-8">{children}</main>
-          <Footer />
-          <KonamiEgg />
-        </LanguageProvider>
+    <html lang="es-EC" className={`${inter.variable} ${grotesk.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Marca que JS está activo antes del primer pintado: las animaciones de entrada solo ocultan contenido si JS corre */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ORG_LD)} />
+      </head>
+      <body className="flex min-h-dvh flex-col">
+        <SiteHeader />
+        <main id="contenido" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter />
+        <KonamiEgg />
+        <SpotlightTracker />
       </body>
     </html>
   );

@@ -1,16 +1,21 @@
-import Link from "next/link";
+import { Button, Container } from "@/components/ui";
 
 export default function NotFound() {
   return (
-    <div className="pixel-border bg-white p-12 text-center">
-      <p className="font-pixel text-4xl text-[#ff2e2e] crt-glow">GAME OVER</p>
-      <p className="font-pixel text-[11px] text-[#16130e] mt-4">ERROR 404 — ESTA MAZMORRA NO EXISTE</p>
-      <p className="text-xl text-[#4a443b] mt-4">La flag que buscas está en otro castillo.</p>
-      <div className="mt-8 flex justify-center gap-4 flex-wrap">
-        <Link href="/" className="pixel-btn">↻ RESPAWN EN HOME</Link>
-        <Link href="/villages" className="pixel-btn pixel-btn-ghost">IR A VILLAGES</Link>
-      </div>
-      <p className="font-pixel text-[9px] text-[#4a443b] mt-6 blink">— INSERT COIN —</p>
-    </div>
+    <section className="noise relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid" aria-hidden />
+      <div className="orb left-1/2 top-0 h-96 w-[700px] -translate-x-1/2 bg-brand/20" aria-hidden />
+      <Container className="relative py-28 text-center md:py-40">
+        <p className="font-mono text-sm text-brand-2">$ curl -I {"<"}esta-ruta{">"}</p>
+        <p className="font-mono text-sm text-dim">HTTP/1.1 404 Not Found</p>
+        <h1 className="font-display mt-8 text-[7rem] font-semibold leading-none text-gradient md:text-[11rem]">404</h1>
+        <p className="font-display mt-4 text-2xl font-semibold text-fg md:text-3xl">Esta ruta no existe… o está muy bien escondida.</p>
+        <p className="mt-3 text-muted">La flag que buscas está en otro castillo.</p>
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <Button href="/" icon="arrow-right">Volver al inicio</Button>
+          <Button href="/eventos" variant="secondary">Ver eventos</Button>
+        </div>
+      </Container>
+    </section>
   );
 }

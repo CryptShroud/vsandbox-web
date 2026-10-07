@@ -1,39 +1,68 @@
-import { Breadcrumb, SectionHeader, PixelCard, Tag, Sprite, PixelButton } from "@/components/pixel";
-import { FogDivider } from "@/components/sf";
-import { villages } from "@/lib/data";
+import { pageMeta } from "@/lib/seo";
+import { mailto } from "@/lib/site";
+import { VILLAGES } from "@/lib/content";
+import { Button, Card, Chip, IconBadge, PageHeader, Section } from "@/components/ui";
+import { JoinCta } from "@/components/blocks";
+import { Reveal } from "@/components/fx";
+import { Icon } from "@/components/icon";
+
+export const metadata = pageMeta({
+  title: "Villages",
+  description: "Zonas prácticas de lockpicking, hardware hacking, OSINT, blue team, criptografía e ingeniería social en los eventos de V-SandBox.",
+  path: "/villages",
+});
 
 export default function Villages() {
   return (
-    <div>
-      <Breadcrumb trail={[["VILLAGES", "/villages"]]} />
-      <SectionHeader kicker="DEF CON STYLE · UIO EDITION" title="Villages" right={<PixelButton href="/unete">▶ CONSEGUIR BADGE</PixelButton>} />
-      <PixelCard className="mb-6">
-        <p className="text-xl text-[#16130e]">Los villages son zonas temáticas abiertas durante nuestros eventos: mesas, herramientas y gente que te enseña con las manos. Sin charlas aburridas — <span className="text-[#ff4d00]">puro hacer</span>.</p>
-        <div className="flex gap-2 flex-wrap mt-3"><Tag>ENTRADA LIBRE</Tag><Tag>6 VILLAGES</Tag><Tag>LA FLORESTA · UIO</Tag></div>
-      </PixelCard>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {villages.map((v) => (
-          <PixelCard key={v.slug} className="flex flex-col">
-            <div className="flex items-center justify-between">
-              <span className="text-[#ff4d00]"><Sprite name={v.icon} size={30} /></span>
-              <Tag>{v.level}</Tag>
+    <>
+      <PageHeader
+        eyebrow="Estilo DEF CON · Edición Quito"
+        title={<>Villages: <span className="text-gradient">aquí se aprende con las manos</span></>}
+        lead="Zonas temáticas abiertas durante nuestros eventos, con mesas, herramientas y gente que te enseña a hacer. Nada de charlas eternas."
+        crumbs={[{ label: "Villages", href: "/villages" }]}
+      >
+        <div className="mt-8 flex flex-wrap gap-2">
+          <Chip tone="brand">Entrada libre</Chip>
+          <Chip>{VILLAGES.length} villages</Chip>
+          <Chip>Todos los niveles</Chip>
+        </div>
+      </PageHeader>
+
+      <Section>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {VILLAGES.map((v, i) => (
+            <Reveal key={v.slug} delay={(i % 3) * 80}>
+              <Card hover className="flex h-full flex-col p-7">
+                <div className="flex items-start justify-between gap-4">
+                  <IconBadge name={v.icon} />
+                  <Chip>{v.level}</Chip>
+                </div>
+                <h2 className="font-display mt-6 text-2xl font-semibold text-fg">{v.name}</h2>
+                <p className="mt-2 text-muted">{v.desc}</p>
+                <ul className="mt-6 space-y-2 border-t border-line pt-5">
+                  {v.activities.map((a) => (
+                    <li key={a} className="flex items-center gap-3 text-sm text-fg">
+                      <Icon name="chevron-right" size={14} className="text-brand-2" /> {a}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal>
+          <div className="mt-10 grid items-center gap-8 rounded-[28px] border border-dashed border-brand/40 bg-brand/[0.05] p-8 md:grid-cols-[1fr_auto] md:p-12">
+            <div>
+              <h2 className="font-display text-2xl font-semibold text-fg md:text-3xl">¿Quieres montar tu propio village?</h2>
+              <p className="mt-2 text-muted">Propón tu zona: con dos voluntarios y una mesa basta. Nosotros ponemos espacio, corriente y café.</p>
             </div>
-            <h3 className="text-xl font-bold text-[#16130e] mt-3">{v.name}</h3>
-            <p className="text-[#4a443b] mt-1 flex-1">{v.desc}</p>
-            <ul className="mt-3 space-y-1">
-              {v.activities.map((a) => (
-                <li key={a} className="text-[#16130e]">→ {a}</li>
-              ))}
-            </ul>
-          </PixelCard>
-        ))}
-      </div>
-      <FogDivider />
-      <PixelCard className="text-center">
-        <p className="font-pixel text-[10px] text-[#ff4d00]">¿QUIERES MONTAR UN VILLAGE?</p>
-        <p className="text-lg text-[#4a443b] mt-2">Propón tu zona (mínimo 2 voluntarios + 1 mesa). Te damos espacio, corriente y café.</p>
-        <div className="mt-4"><PixelButton href="/contacto">▶ PROPONER VILLAGE</PixelButton></div>
-      </PixelCard>
-    </div>
+            <Button href={mailto("Propuesta de village para V-SandBox")} icon="arrow-right">Proponer village</Button>
+          </div>
+        </Reveal>
+      </Section>
+
+      <JoinCta />
+    </>
   );
 }

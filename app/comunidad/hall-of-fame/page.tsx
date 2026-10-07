@@ -1,23 +1,35 @@
-import { Breadcrumb, SectionHeader, PixelCard, Tag, PixelAvatar } from "@/components/pixel";
-import { members } from "@/lib/data";
+import { pageMeta } from "@/lib/seo";
+import { allSpeakers } from "@/lib/events";
+import { Button, PageHeader, Section } from "@/components/ui";
+import { SpeakerCard } from "@/components/blocks";
+import { Reveal } from "@/components/fx";
+
+export const metadata = pageMeta({
+  title: "Hall of Fame",
+  description: "Todas las personas que han subido al escenario de V-SandBox: investigadores, red teamers, especialistas AppSec y más.",
+  path: "/comunidad/hall-of-fame",
+});
 
 export default function HallOfFame() {
-  const legends = members.slice(0, 3);
+  const speakers = allSpeakers();
   return (
-    <div>
-      <Breadcrumb trail={[["COMUNIDAD", "/comunidad"], ["HALL OF FAME", "/comunidad/hall-of-fame"]]} />
-      <SectionHeader kicker="LEGENDS" title="HALL OF FAME" />
-      <div className="grid md:grid-cols-3 gap-4">
-        {legends.map((m, i) => (
-          <PixelCard key={m.nick} className="text-center pixel-border">
-            <p className="font-pixel text-[10px] text-[#ff4d00]">{["◆ LEYENDA DE ORO", "◆ LEYENDA DE PLATA", "◆ LEYENDA DE BRONCE"][i]}</p>
-            <div className="flex justify-center mt-3"><PixelAvatar nick={m.nick} size={72} /></div>
-            <p className="font-pixel text-xs text-[#16130e] mt-3">{m.nick}</p>
-            <div className="mt-2"><Tag>{m.xp} XP · LVL {m.level}</Tag></div>
-            <p className="text-lg text-[#4a443b] mt-2">Por mentoría incansable y writeups legendarios en la season 03.</p>
-          </PixelCard>
-        ))}
-      </div>
-    </div>
+    <>
+      <PageHeader
+        eyebrow="Legends"
+        title="Hall of Fame"
+        lead={`${speakers.length} personas han compartido su conocimiento en el escenario de V-SandBox. Este muro es para ellas.`}
+        crumbs={[{ label: "Comunidad", href: "/comunidad" }, { label: "Hall of Fame", href: "/comunidad/hall-of-fame" }]}
+        actions={<Button href="/cfp" icon="arrow-right">Quiero estar en este muro</Button>}
+      />
+      <Section>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {speakers.map((sp, i) => (
+            <Reveal key={sp.name} delay={(i % 3) * 80}>
+              <SpeakerCard sp={sp} editions={sp.editions} />
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+    </>
   );
 }
