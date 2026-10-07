@@ -38,14 +38,12 @@ export const NAV: { label: string; href: string }[] = [
 
 export type Partner = { name: string; role: string; url?: string };
 
-/* Organizaciones que han estado presentes en ediciones pasadas (visibles en el material de los eventos). */
+/* Organizaciones que acompañan a la comunidad (franja de la home, patrocinadores y "Quiénes somos"). */
 export const PARTNERS: Partner[] = [
   { name: "Vultaethel", role: "Organizador", url: "https://vultaethel.com" },
-  { name: "OffSec", role: "Sponsor · Edición 01", url: "https://www.offsec.com" },
-  { name: "IEEE ComSoc", role: "Aliado académico" },
-  { name: "IEEE Computer Society UIDE", role: "Rama estudiantil" },
-  { name: "GDG Quito", role: "Build with AI" },
-  { name: "AWS Community", role: "Community Day" },
-  { name: "Cibermind EPN", role: "Aliado EPN" },
-  { name: "CIESPAL", role: "Sede · Edición 01" },
+  { name: "OffSec", role: "Sponsor", url: "https://www.offsec.com" },
+  { name: "IVera Corp", role: "Aliado" },
+  { name: "VULT Institute", role: "Aliado" },
+  { name: "Et3 Multiticketing", role: "Aliado" },
+  { name: "IQ", role: "Aliado" },
 ];

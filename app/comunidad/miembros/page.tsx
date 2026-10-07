@@ -30,7 +30,7 @@ export default function Miembros() {
               <Image src={FOUNDER.img} alt={`Retrato de ${FOUNDER.name}`} fill sizes="(max-width: 768px) 100vw, 340px" className="object-cover object-top" />
             </div>
             <div className="flex flex-col justify-center p-8 md:p-12">
-              <Chip tone="brand">Fundador</Chip>
+              <div><Chip tone="brand">Fundador</Chip></div>
               <h2 className="font-display mt-5 text-4xl font-semibold text-fg">{FOUNDER.name}</h2>
               <p className="mt-2 font-mono text-sm uppercase tracking-[0.12em] text-brand-2">{FOUNDER.role}</p>
               <p className="mt-5 max-w-xl text-lg text-muted">
@@ -43,7 +43,7 @@ export default function Miembros() {
 
       <Section className="border-y border-line bg-bg-2/50">
         <SectionHeading eyebrow="Ecosistema" title="Organizaciones que nos acompañan" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {PARTNERS.map((p, i) => (
             <Reveal key={p.name} delay={i * 60}>
               <Card className="flex h-full flex-col justify-between p-6">

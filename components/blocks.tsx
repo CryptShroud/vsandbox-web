@@ -9,7 +9,7 @@ import { LogoMark } from "./logo";
 
 /* Franja con las organizaciones que han estado en las ediciones */
 export function PartnersStrip({ title = "Han sido parte de V-SandBox" }: { title?: string }) {
-  const row = [...PARTNERS, ...PARTNERS];
+  const row = [...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS];
   return (
     <section aria-label={title} className="border-y border-line bg-bg-2/60 py-10">
       <Container>
