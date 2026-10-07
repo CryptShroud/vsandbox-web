@@ -1,0 +1,11 @@
+{
+  // Sitio estático: se sirve la carpeta `out/` que genera `next build` (output: "export").
+  // IMPORTANTE: "name" debe ser igual al nombre del Worker en Cloudflare (Workers & Pages → tu Worker).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vsandbox-web",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page"
+  }
+}

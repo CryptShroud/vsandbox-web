@@ -26,3 +26,14 @@ Las páginas de eventos (`/eventos/[slug]`) se generan desde `lib/events.ts`: pa
 - `components/blocks.tsx`: bloques reutilizables (aliados, ponentes, ediciones, CTA).
 - `components/fx.tsx`: piezas interactivas (reveal, countdown, consola, easter egg).
 - `app/globals.css`: tokens de diseño (colores y fuentes) y clases base.
+
+## Despliegue (Cloudflare Workers, sitio estático)
+
+El sitio se exporta a archivos estáticos (`output: "export"`) y se sirve desde Cloudflare con `wrangler.jsonc`.
+
+- **Local:** `npm run deploy` (hace `next build` y `wrangler deploy`; requiere `npx wrangler login` la primera vez).
+- **Desde GitHub (Workers Builds):** en Cloudflare → Workers & Pages → tu Worker → Settings → Build:
+  - Build command: `npm run build`
+  - Deploy command: `npx wrangler deploy`
+  - El `name` de `wrangler.jsonc` debe coincidir con el nombre del Worker.
+- La imagen para redes está en `public/og.png` (1200×630).

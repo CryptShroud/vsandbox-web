@@ -53,7 +53,7 @@ export type AnyEvent = Edition | CommunityEvent;
 
 const E00 = "/eventos/edicion-00";
 const E01 = "/eventos/edicion-01";
-const FELIPE = `${E00}/speakers/felipe-grados.png`;
+const FELIPE = `${E00}/speakers/felipe-grados.jpg`;
 
 export const EDITIONS: Edition[] = [
   {
@@ -94,9 +94,9 @@ export const EDITIONS: Edition[] = [
     speakers: [
       { name: "Jaime Ramírez", role: "Cybersecurity Researcher", img: `${E01}/speakers/jaime-ramirez.jpeg`, bio: "Hacking Mobile 101: introducción al pentesting móvil con iOS, Android y Frida." },
       { name: "Esteban Jiménez", role: "HackTheBox Guru · #1 Ecuador", img: `${E01}/speakers/esteban-jimenez.jpg`, bio: "De HTB a la trinchera: cómo escalar en la plataforma y lo que aprendió en el camino hacia el Red Team." },
-      { name: "Galo Candela", role: "Lead Analyst AppSec · NTT DATA", img: `${E01}/speakers/galo-candela.png`, bio: "El eslabón olvidado: de SNMP a Domain Controller. Threat modeling y la cadena de ataque que nadie mira." },
+      { name: "Galo Candela", role: "Lead Analyst AppSec · NTT DATA", img: `${E01}/speakers/galo-candela.jpg`, bio: "El eslabón olvidado: de SNMP a Domain Controller. Threat modeling y la cadena de ataque que nadie mira." },
       { name: "Felipe Grados", role: "Founder V-SandBox · CEO Vultaethel", img: FELIPE, bio: "Privilege escalation: del acceso inicial a root. El fundador cerrando la operación." },
-      { name: "Darío Portero", role: "Abogado · Ciberderecho", img: `${E01}/speakers/dario-portero.png`, bio: "Ley de Ciberseguridad 2026: qué cambia para los profesionales y por qué el marco legal importa." },
+      { name: "Darío Portero", role: "Abogado · Ciberderecho", img: `${E01}/speakers/dario-portero.jpg`, bio: "Ley de Ciberseguridad 2026: qué cambia para los profesionales y por qué el marco legal importa." },
     ],
     photos: [
       { src: `${E01}/gallery/DSC07908.jpg`, cap: "Foto oficial: la comunidad completa", cat: "Networking", w: 1600, h: 1067 },
@@ -153,10 +153,10 @@ export const EDITIONS: Edition[] = [
       { time: "20:15", title: "Cierre oficial", desc: "Reconocimientos, palabras finales y despedida." },
     ],
     speakers: [
-      { name: "Daniel Troya", role: "Investigación en ciberseguridad", img: `${E00}/speakers/daniel-troya.png`, bio: "Estudiante de Ciencias Computacionales con enfoque en investigación científica aplicada a la ciberseguridad." },
-      { name: "Nakleh Said Zeidan", role: "AppSec · 10 CVEs", img: `${E00}/speakers/said.png`, bio: "Especialista en AppSec con 10 CVEs documentados y múltiples vulnerabilidades críticas reportadas." },
-      { name: "Jacob Pérez", role: "Seguridad inalámbrica", img: `${E00}/speakers/jacob-peres.png`, bio: "Evaluación de la seguridad de redes inalámbricas para identificar vulnerabilidades explotables." },
-      { name: "Esteban Cárdenas", role: "Ethical hacking y privacidad", img: `${E00}/speakers/esteban-cardenas.png`, bio: "El ethical hacking como consecuencia de la necesidad de proteger los datos personales." },
+      { name: "Daniel Troya", role: "Investigación en ciberseguridad", img: `${E00}/speakers/daniel-troya.jpg`, bio: "Estudiante de Ciencias Computacionales con enfoque en investigación científica aplicada a la ciberseguridad." },
+      { name: "Nakleh Said Zeidan", role: "AppSec · 10 CVEs", img: `${E00}/speakers/said.jpg`, bio: "Especialista en AppSec con 10 CVEs documentados y múltiples vulnerabilidades críticas reportadas." },
+      { name: "Jacob Pérez", role: "Seguridad inalámbrica", img: `${E00}/speakers/jacob-peres.jpg`, bio: "Evaluación de la seguridad de redes inalámbricas para identificar vulnerabilidades explotables." },
+      { name: "Esteban Cárdenas", role: "Ethical hacking y privacidad", img: `${E00}/speakers/esteban-cardenas.jpg`, bio: "El ethical hacking como consecuencia de la necesidad de proteger los datos personales." },
       { name: "Felipe Grados", role: "Founder V-SandBox · CEO Vultaethel", img: FELIPE, bio: "Live ransomware en hardware real." },
     ],
     photos: [
