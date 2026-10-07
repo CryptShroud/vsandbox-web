@@ -17,7 +17,7 @@ npm run lint
 | Ediciones, meetups, eventos con aliados, ponentes, agenda y galerías | `lib/events.ts` |
 | Villages, paquetes de sponsor, FAQ, reglas y código de conducta | `lib/content.ts` |
 
-Las páginas de eventos (`/eventos/[slug]`) se generan desde `lib/events.ts`: para añadir una edición agrega un objeto a `EDITIONS`; para un meetup, evento con aliados o laboratorio, a `MEETUPS`, `COLLABS` o `LABS`. Las imágenes van en `public/eventos/<slug>/` (la carpeta `FOTOSEVENTOS/` es solo material fuente y git la ignora).
+Las páginas de eventos (`/eventos/[slug]`) se generan desde `lib/events.ts`: para añadir una edición agrega un objeto a `EDITIONS`; para un meetup, evento con aliados o laboratorio, a `MEETUPS`, `COLLABS` o `LABS`. Las imágenes van en `public/eventos/<slug>/` (`FOTOSEVENTOS/` guarda las fotos originales sin optimizar).
 
 ## Estructura
 
