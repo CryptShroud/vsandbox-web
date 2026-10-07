@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NAV, SITE } from "@/lib/site";
-import { SANDBOX_CON } from "@/lib/events";
 import { LogoFull } from "./logo";
 import { Icon } from "./icon";
 
@@ -44,17 +43,19 @@ export function SiteHeader() {
         Saltar al contenido
       </a>
 
-      <Link
-        href={`/eventos/${SANDBOX_CON.slug}`}
+      <a
+        href={SITE.whatsapp}
+        target="_blank"
+        rel="noopener noreferrer"
         className="group relative z-50 block border-b border-line bg-gradient-to-r from-brand/15 via-bg to-violet/15 py-2.5 text-center text-[13px] text-muted transition-colors hover:text-fg"
       >
         <span className="container-x flex items-center justify-center gap-2">
-          <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-brand text-brand" />
-          <span className="font-semibold text-fg">{SANDBOX_CON.name}</span>
-          <span className="hidden sm:inline">· {SANDBOX_CON.dateLabel} · {SANDBOX_CON.venue}, Quito</span>
+          <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-ok text-ok" />
+          <span className="font-semibold text-fg">Próximos eventos por anunciar</span>
+          <span className="hidden sm:inline">· Entérate primero en el grupo de WhatsApp</span>
           <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
         </span>
-      </Link>
+      </a>
 
       <header
         className={`sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
@@ -87,7 +88,7 @@ export function SiteHeader() {
 
           <div className="ml-auto flex items-center gap-2">
             <Link href="/cfp" className="btn btn-secondary btn-sm hidden md:inline-flex">
-              Call for Papers
+              Proponer charla
             </Link>
             <Link href="/unete" className="btn btn-primary btn-sm">
               Únete
@@ -108,7 +109,7 @@ export function SiteHeader() {
         {open && (
           <nav id="menu-movil" aria-label="Menú móvil" className="h-[calc(100dvh-72px)] overflow-y-auto border-t border-line bg-bg lg:hidden">
             <ul className="container-x py-6">
-              {[{ label: "Inicio", href: "/" }, ...NAV, { label: "Call for Papers", href: "/cfp" }, { label: "Manifiesto", href: "/manifiesto" }, { label: "FAQ", href: "/faq" }, { label: "Contacto", href: "/contacto" }].map(
+              {[{ label: "Inicio", href: "/" }, ...NAV, { label: "Proponer charla", href: "/cfp" }, { label: "Manifiesto", href: "/manifiesto" }, { label: "FAQ", href: "/faq" }, { label: "Contacto", href: "/contacto" }].map(
                 ({ label, href }) => {
                   const active = href === "/" ? pathname === "/" : isActive(pathname, href);
                   return (

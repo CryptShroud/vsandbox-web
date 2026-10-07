@@ -2,15 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { EVENTS, getEvent, type Edition, type MainEvent } from "@/lib/events";
+import { EVENTS, getEvent, type CommunityEvent, type Edition } from "@/lib/events";
 import { pageMeta, jsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/site";
-import { BeforeAfter, Countdown, CountUp, Reveal, Tilt } from "@/components/fx";
-import { Button, Card, CheckList, Chip, Container, Eyebrow, IconBadge, PageHeader, Section, SectionHeading } from "@/components/ui";
-import { JoinCta, PartnersStrip, SpeakerCard } from "@/components/blocks";
+import { CountUp, Reveal, Tilt } from "@/components/fx";
+import { Button, Chip, Container, Eyebrow, IconBadge, Section, SectionHeading } from "@/components/ui";
+import { JoinCta, SpeakerCard } from "@/components/blocks";
 import { Gallery } from "@/components/gallery";
 import { Icon } from "@/components/icon";
-import { VILLAGES } from "@/lib/content";
 
 export const dynamicParams = false;
 
@@ -22,23 +21,28 @@ export async function generateMetadata({ params }: PageProps<"/eventos/[slug]">)
   const { slug } = await params;
   const ev = getEvent(slug);
   if (!ev) return {};
-  const title = ev.kind === "main" ? ev.name : `${ev.name}: ${ev.codename}`;
+  const title = ev.kind === "edition" ? `${ev.name}: ${ev.codename}` : `${ev.series}: ${ev.title}`;
   return pageMeta({ title, description: ev.summary, path: `/eventos/${ev.slug}` });
 }
 
-function eventLd(ev: Edition | MainEvent) {
+function eventLd(ev: Edition | CommunityEvent) {
+  const online = ev.kind !== "edition" && ev.mode.startsWith("Online");
+  const venue = ev.kind === "edition" ? ev.venue : ev.venue;
+  if (!ev.start) return null; // schema.org Event exige startDate
   return {
     "@context": "https://schema.org",
     "@type": "Event",
-    name: ev.kind === "main" ? ev.name : `${ev.name}: ${ev.codename}`,
+    name: ev.kind === "edition" ? `${ev.name}: ${ev.codename}` : `${ev.series}: ${ev.title}`,
     description: ev.summary,
     startDate: ev.start,
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    eventAttendanceMode: online ? "https://schema.org/OnlineEventAttendanceMode" : "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
     image: [`${SITE.url}${ev.cover.src}`],
-    location: { "@type": "Place", name: ev.venue, address: { "@type": "PostalAddress", streetAddress: ev.address, addressLocality: "Quito", addressCountry: "EC" } },
+    location: online
+      ? { "@type": "VirtualLocation", url: SITE.url }
+      : { "@type": "Place", name: venue, address: { "@type": "PostalAddress", streetAddress: ev.kind === "edition" ? ev.address : venue, addressLocality: "Quito", addressCountry: "EC" } },
     organizer: { "@type": "Organization", name: SITE.fullName, url: SITE.url },
-    ...(ev.kind === "edition" ? { performer: ev.speakers.map((s) => ({ "@type": "Person", name: s.name })) } : {}),
+    ...(ev.kind === "edition" ? { performer: ev.speakers.map((s) => ({ "@type": "Person", name: s.name })) } : ev.speaker ? { performer: { "@type": "Person", name: ev.speaker } } : {}),
   };
 }
 
@@ -46,118 +50,104 @@ export default async function EventPage({ params }: PageProps<"/eventos/[slug]">
   const { slug } = await params;
   const ev = getEvent(slug);
   if (!ev) notFound();
+  const ld = eventLd(ev);
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(eventLd(ev))} />
-      {ev.kind === "main" ? <MainEventView ev={ev} /> : <EditionView ed={ev} />}
+      {ld && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ld)} />}
+      {ev.kind === "edition" ? <EditionView ed={ev} /> : <CommunityView ev={ev} />}
     </>
   );
 }
 
-/* ================= Sandbox-Con (próximo) ================= */
-function MainEventView({ ev }: { ev: MainEvent }) {
+/* ================= Meetup / evento en comunidad / laboratorio ================= */
+const KIND_LABEL = { meetup: "Meetup virtual", collab: "En comunidad", lab: "Laboratorio" } as const;
+
+function CommunityView({ ev }: { ev: CommunityEvent }) {
+  const meta: [string, string, string][] = [
+    ...(ev.dateLabel ? ([["calendar", "Fecha", ev.dateLabel]] as [string, string, string][]) : []),
+    ...(ev.timeLabel ? ([["clock", "Horario", ev.timeLabel]] as [string, string, string][]) : []),
+    ["globe", "Modalidad", ev.mode],
+    ...(ev.venue ? ([["pin", "Lugar", ev.venue]] as [string, string, string][]) : []),
+    ...(ev.speaker ? ([["mic", "Invitado", ev.speaker]] as [string, string, string][]) : []),
+  ];
+  const hero = ev.poster ?? ev.cover;
   return (
     <>
-      <PageHeader
-        eyebrow={`${ev.codename} · ${ev.dateLabel}`}
-        title={<>{ev.name.replace(" 2026", "")} <span className="text-gradient">2026</span></>}
-        lead={ev.lead}
-        crumbs={[{ label: "Eventos", href: "/eventos" }, { label: ev.name, href: `/eventos/${ev.slug}` }]}
-        actions={
-          <>
-            <Button href={SITE.whatsapp} variant="wa" size="lg">Quiero ir</Button>
-            <BeforeAfter
-              date={ev.cfp.deadline}
-              before={<Button href="/cfp" variant="secondary" size="lg" icon="arrow-right">Proponer charla</Button>}
-              after={<Button href="/ctf" variant="secondary" size="lg" icon="arrow-right">Ver el CTF</Button>}
-            />
-          </>
-        }
-      >
-        <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-            {[
-              ["calendar", "Fecha", `${ev.dateLabel} · 09:00`],
-              ["pin", "Lugar", `${ev.venue}, ${ev.address}`],
-              ["ticket", "Registro", "Novedades en el grupo de WhatsApp"],
-            ].map(([icon, k, v]) => (
-              <div key={k} className="flex items-start gap-4 rounded-2xl border border-line bg-white/[0.03] p-4">
-                <Icon name={icon} size={20} className="mt-0.5 text-brand-2" />
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-dim">{k}</p>
-                  <p className="mt-1 text-fg">{v}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="card beam bg-surface p-6 md:p-8">
-            <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.18em] text-dim">Cuenta regresiva</p>
-            <Countdown target={ev.start} />
-          </div>
-        </div>
-      </PageHeader>
-
-      <Section>
-        <SectionHeading eyebrow="El formato" title="Un día, cuatro frentes" lead="Elige tu modo: escuchar, competir, tocar hardware o conectar. O todos a la vez." />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {ev.formats.map((f, i) => (
-            <Reveal key={f.title} delay={i * 80}>
-              <Card hover className="h-full p-7">
-                <IconBadge name={f.icon} />
-                <h3 className="font-display mt-6 text-xl font-semibold text-fg">{f.title}</h3>
-                <p className="mt-2 text-muted">{f.desc}</p>
-              </Card>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      <Section className="border-y border-line bg-bg-2/50">
-        <div className="grid gap-10 lg:grid-cols-2">
-          <Reveal>
-            <Eyebrow>Capture The Flag</Eyebrow>
-            <h2 className="font-display mt-5 text-4xl font-semibold text-fg md:text-5xl">El CTF de Sandbox-Con</h2>
-            <p className="mt-5 text-lg text-muted">Formato {ev.ctf.format.toLowerCase()} con retos diseñados por la comunidad. {ev.ctf.teams}.</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {ev.ctf.categories.map((c) => <Chip key={c} tone="brand">{c}</Chip>)}
+      <header className="noise relative overflow-hidden border-b border-line">
+        <div className="absolute inset-0 bg-grid" aria-hidden />
+        <div className="orb -top-40 left-0 h-[480px] w-[480px] bg-brand/20" aria-hidden />
+        <div className="orb -bottom-40 right-0 h-[420px] w-[420px] bg-violet/20" aria-hidden />
+        <Container className="relative grid items-center gap-12 py-14 md:py-20 lg:grid-cols-2">
+          <div>
+            <nav aria-label="Migas de pan" className="mb-8 font-mono text-xs text-dim">
+              <Link href="/" className="hover:text-fg">Inicio</Link> <span className="mx-1">/</span>{" "}
+              <Link href="/eventos" className="hover:text-fg">Eventos</Link> <span className="mx-1">/</span>{" "}
+              <span aria-current="page" className="text-muted">{ev.series}</span>
+            </nav>
+            <div className="flex flex-wrap gap-2">
+              <Chip tone="brand">{KIND_LABEL[ev.kind]}</Chip>
+              <Chip tone="ok">Archivado</Chip>
             </div>
-            <CheckList className="mt-8" items={[ev.ctf.prizes, "Equipos mixtos y principiantes bienvenidos", "Reglas claras y juego limpio"]} />
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Button href="/ctf/equipos" icon="arrow-right">Arma tu equipo</Button>
-              <Button href="/ctf/reglas" variant="secondary">Reglas</Button>
-            </div>
-          </Reveal>
-          <Reveal delay={120}>
-            <div className="grid grid-cols-2 gap-3">
-              {VILLAGES.map((v) => (
-                <div key={v.slug} className="rounded-2xl border border-line bg-white/[0.02] p-5">
-                  <Icon name={v.icon} size={22} className="text-brand-2" />
-                  <p className="mt-3 font-semibold text-fg">{v.name}</p>
-                  <p className="mt-1 text-xs text-dim">Village</p>
+            <p className="mt-6 font-mono text-sm uppercase tracking-[0.16em] text-brand-2">{ev.series}</p>
+            <h1 className="font-display mt-3 text-4xl font-semibold leading-[1.02] text-fg md:text-6xl">{ev.title}</h1>
+            <p className="mt-6 max-w-xl text-lg text-muted">{ev.summary}</p>
+            <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-2">
+              {meta.map(([icon, k, v]) => (
+                <div key={k} className="rounded-2xl border border-line bg-white/[0.03] p-4">
+                  <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-dim"><Icon name={icon} size={14} /> {k}</p>
+                  <p className="mt-2 font-semibold text-fg">{v}</p>
                 </div>
               ))}
             </div>
+          </div>
+          <Tilt max={4}>
+            <div className="card relative overflow-hidden p-2">
+              <Image
+                src={hero.src}
+                alt={hero.alt}
+                width={hero.w}
+                height={hero.h}
+                priority
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className="h-auto w-full rounded-[14px]"
+              />
+            </div>
+          </Tilt>
+        </Container>
+      </header>
+
+      <Section>
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
+          <Reveal>
+            <Eyebrow>De qué trató</Eyebrow>
+            <h2 className="font-display mt-5 text-3xl font-semibold leading-[1.05] text-fg md:text-4xl">Lo que se vio</h2>
+            {ev.highlights && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                {ev.highlights.map((h) => <Chip key={h} tone="brand">{h}</Chip>)}
+              </div>
+            )}
+          </Reveal>
+          <Reveal delay={100}>
+            <div className="space-y-5 text-lg leading-relaxed text-muted">
+              {ev.body.map((p, i) => <p key={i}>{p}</p>)}
+              {ev.partners && (
+                <p className="flex flex-wrap items-center gap-2 pt-2 text-base">
+                  <span className="text-dim">Con:</span> {ev.partners.map((p) => <Chip key={p}>{p}</Chip>)}
+                </p>
+              )}
+            </div>
           </Reveal>
         </div>
       </Section>
 
-      <Section>
-        <Reveal>
-          <div className="grid items-center gap-10 rounded-[32px] border border-line bg-gradient-to-br from-brand/10 via-surface to-violet/10 p-8 md:p-14 lg:grid-cols-[1.4fr_1fr]">
-            <div>
-              <Eyebrow>Call for Papers</Eyebrow>
-              <h2 className="font-display mt-5 text-3xl font-semibold text-fg md:text-4xl">¿Rompiste algo interesante? Enséñalo en el main stage.</h2>
-              <p className="mt-4 text-muted">Charlas de 25 minutos + 5 de Q&A. Cierre: {ev.cfp.deadlineLabel}. Respuestas antes del {ev.cfp.resultsLabel}.</p>
-            </div>
-            <div className="flex flex-wrap gap-3 lg:justify-end">
-              <Button href="/cfp" size="lg" icon="arrow-right">Enviar propuesta</Button>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
+      {ev.photos.length > 0 && (
+        <Section className="border-y border-line bg-bg-2/50">
+          <SectionHeading eyebrow={`${ev.photos.length} imágenes`} title="Galería" lead="Abre cualquier imagen en pantalla completa." />
+          <Gallery photos={ev.photos} />
+        </Section>
+      )}
 
-      <PartnersStrip title="Aliados de ediciones anteriores" />
-      <JoinCta title="Nos vemos el 08 de noviembre." />
+      <JoinCta eyebrow="Siguiente nodo" title="No te pierdas el próximo." lead="Los meetups y eventos se anuncian primero en el grupo de WhatsApp." />
     </>
   );
 }
@@ -286,17 +276,15 @@ function EditionView({ ed }: { ed: Edition }) {
 
       {ed.ctf && (
         <Section id="ctf" className="border-y border-line bg-bg-2/50">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div className={`grid items-center gap-10 ${ed.ctf.poster ? "lg:grid-cols-2" : "max-w-3xl"}`}>
             <Reveal>
               <Eyebrow>Capture The Flag</Eyebrow>
               <h2 className="font-display mt-5 text-4xl font-semibold text-fg md:text-5xl">{ed.ctf.title}</h2>
               <p className="mt-5 text-lg text-muted">{ed.ctf.desc}</p>
               {ed.ctf.prizes && (
-                <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 text-amber" /> {ed.ctf.prizes}</p>
+                <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 shrink-0 text-amber" /> {ed.ctf.prizes}</p>
               )}
-            </Reveal>
-            <Reveal delay={100}>
-              <ol className="space-y-3">
+              <ol className="mt-8 space-y-3">
                 {ed.ctf.phases.map((ph, i, arr) => (
                   <li key={ph} className="flex items-center gap-4 rounded-2xl border border-line bg-white/[0.02] p-4">
                     <span className="font-mono text-sm text-brand-2">0{i + 1}</span>
@@ -307,6 +295,13 @@ function EditionView({ ed }: { ed: Edition }) {
                 ))}
               </ol>
             </Reveal>
+            {ed.ctf.poster && (
+              <Reveal delay={100}>
+                <div className="card overflow-hidden p-2">
+                  <Image src={ed.ctf.poster.src} alt={ed.ctf.poster.alt} width={ed.ctf.poster.w} height={ed.ctf.poster.h} sizes="(max-width: 1024px) 100vw, 560px" className="h-auto w-full rounded-[14px]" />
+                </div>
+              </Reveal>
+            )}
           </div>
         </Section>
       )}

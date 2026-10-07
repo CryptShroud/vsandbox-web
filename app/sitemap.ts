@@ -30,6 +30,6 @@ const STATIC: [string, number][] = [
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...STATIC.map(([path, priority]) => ({ url: `${SITE.url}${path || "/"}`, priority })),
-    ...EVENTS.map((e) => ({ url: `${SITE.url}/eventos/${e.slug}`, priority: e.kind === "main" ? 0.9 : 0.7 })),
+    ...EVENTS.map((e) => ({ url: `${SITE.url}/eventos/${e.slug}`, priority: e.kind === "edition" ? 0.7 : 0.6 })),
   ];
 }

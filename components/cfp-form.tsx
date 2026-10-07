@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SITE, mailto } from "@/lib/site";
 import { Icon } from "./icon";
 import { TRACKS } from "@/lib/content";
@@ -10,24 +10,9 @@ const LEVELS = ["Introductorio", "Intermedio", "Avanzado"];
 const field =
   "w-full rounded-xl border border-line bg-black/30 px-4 py-3 text-fg placeholder:text-dim outline-none transition-colors focus:border-brand focus:bg-black/50";
 
-export function CfpForm({ deadline, deadlineLabel }: { deadline: string; deadlineLabel: string }) {
-  const [closed, setClosed] = useState(false);
+export function CfpForm() {
   const [sentBody, setSentBody] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    const id = setTimeout(() => setClosed(Date.now() > new Date(deadline).getTime()), 0);
-    return () => clearTimeout(id);
-  }, [deadline]);
-
-  if (closed) {
-    return (
-      <div className="rounded-2xl border border-line bg-white/[0.03] p-8 text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-amber">CFP cerrado</p>
-        <p className="mt-3 text-muted">El Call for Papers cerró el {deadlineLabel}. Escríbenos a {SITE.email} si quieres hablar en un próximo meetup.</p>
-      </div>
-    );
-  }
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +33,7 @@ export function CfpForm({ deadline, deadlineLabel }: { deadline: string; deadlin
       `Sobre mí: ${get("bio") || "-"}`,
     ].join("\n");
     setSentBody(body);
-    window.location.href = mailto(`[CFP Sandbox-Con] ${get("title")}`, body);
+    window.location.href = mailto(`[Propuesta de charla] ${get("title")}`, body);
   };
 
   if (sentBody) {
@@ -93,7 +78,7 @@ export function CfpForm({ deadline, deadlineLabel }: { deadline: string; deadlin
       </label>
       <label className="block md:col-span-2">
         <span className="mb-2 block text-sm font-medium text-fg">Título de la charla *</span>
-        <input name="title" required maxLength={120} className={field} placeholder="De SNMP a Domain Admin en 20 minutos" />
+        <input name="title" required maxLength={120} className={field} placeholder="De SNMP a Domain Admin en 30 minutos" />
       </label>
       <label className="block">
         <span className="mb-2 block text-sm font-medium text-fg">Track *</span>

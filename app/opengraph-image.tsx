@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { SANDBOX_CON } from "@/lib/events";
 
 export const alt = "V-SandBox: la comunidad hacker de Quito";
 export const size = { width: 1200, height: 630 };
@@ -34,7 +33,7 @@ export default async function OpengraphImage() {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#a6a6b3" }}>
           <span>Conferencias · CTFs · Villages · Meetups</span>
-          <span style={{ color: "#ffb020" }}>{SANDBOX_CON.name} · 08 NOV</span>
+          <span style={{ color: "#ffb020" }}>community.vultaethel.com</span>
         </div>
       </div>
     ),

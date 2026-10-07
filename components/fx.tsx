@@ -68,65 +68,6 @@ export function CountUp({ to, suffix = "", duration = 1400 }: { to: number; suff
   );
 }
 
-/* ---------- cuenta regresiva ---------- */
-type Parts = { d: number; h: number; m: number; s: number };
-
-function diffParts(target: number): Parts | "done" {
-  const diff = target - Date.now();
-  if (diff <= 0) return "done";
-  return {
-    d: Math.floor(diff / 86400000),
-    h: Math.floor(diff / 3600000) % 24,
-    m: Math.floor(diff / 60000) % 60,
-    s: Math.floor(diff / 1000) % 60,
-  };
-}
-
-export function Countdown({ target, doneLabel = "¡Es hoy! Nos vemos en el evento" }: { target: string; doneLabel?: string }) {
-  // null en el servidor y en la hidratación: evita desajustes de HTML
-  const [parts, setParts] = useState<Parts | "done" | null>(null);
-  useEffect(() => {
-    const t = new Date(target).getTime();
-    const tick = () => setParts(diffParts(t));
-    const boot = setTimeout(tick, 0);
-    const id = setInterval(tick, 1000);
-    return () => {
-      clearTimeout(boot);
-      clearInterval(id);
-    };
-  }, [target]);
-
-  if (parts === "done") {
-    return <p className="font-mono text-sm uppercase tracking-[0.16em] text-amber">{doneLabel}</p>;
-  }
-  const cells: [number | null, string][] = [
-    [parts?.d ?? null, "Días"],
-    [parts?.h ?? null, "Horas"],
-    [parts?.m ?? null, "Min"],
-    [parts?.s ?? null, "Seg"],
-  ];
-  return (
-    <div className="grid grid-cols-4 gap-2 sm:gap-3" role="timer" aria-label="Cuenta regresiva">
-      {cells.map(([v, l]) => (
-        <div key={l} className="rounded-2xl border border-line bg-black/40 px-2 py-3 text-center backdrop-blur sm:px-4 sm:py-4">
-          <p className="font-display text-3xl font-semibold tabular-nums text-fg sm:text-4xl">{v === null ? "--" : String(v).padStart(2, "0")}</p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-dim">{l}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* Muestra uno u otro contenido según si la fecha ya pasó (se evalúa en el navegador). */
-export function BeforeAfter({ date, before, after }: { date: string; before: ReactNode; after: ReactNode }) {
-  const [past, setPast] = useState<boolean | null>(null);
-  useEffect(() => {
-    const id = setTimeout(() => setPast(Date.now() > new Date(date).getTime()), 0);
-    return () => clearTimeout(id);
-  }, [date]);
-  return <>{past ? after : before}</>;
-}
-
 /* ---------- inclinación 3D (solo con puntero fino y sin reduced-motion) ---------- */
 export function Tilt({ children, max = 6, className = "" }: { children: ReactNode; max?: number; className?: string }) {
   const ref = useRef<HTMLDivElement | null>(null);

@@ -1,12 +1,12 @@
 import { pageMeta } from "@/lib/seo";
-import { SANDBOX_CON } from "@/lib/events";
+import { SITE } from "@/lib/site";
 import { Button, PageHeader, Section } from "@/components/ui";
-import { Countdown, Reveal } from "@/components/fx";
+import { Reveal } from "@/components/fx";
 import { Icon } from "@/components/icon";
 
 export const metadata = pageMeta({
   title: "Scoreboard",
-  description: `Clasificación en vivo del CTF de ${SANDBOX_CON.name}.`,
+  description: "Clasificación en vivo de los CTFs de V-SandBox. Se activa cuando arranca cada competencia.",
   path: "/ctf/ranking",
 });
 
@@ -20,9 +20,9 @@ export default function Ranking() {
   return (
     <>
       <PageHeader
-        eyebrow="Season 2026"
+        eyebrow="Scoreboard"
         title="Scoreboard"
-        lead="La clasificación se activa cuando arranca el CTF y se actualiza en tiempo real durante la competencia."
+        lead="La clasificación se activa cuando arranca un CTF y se actualiza en tiempo real durante la competencia."
         crumbs={[{ label: "CTF", href: "/ctf" }, { label: "Scoreboard", href: "/ctf/ranking" }]}
       />
       <Section>
@@ -42,12 +42,11 @@ export default function Ranking() {
               ))}
             </div>
             <div className="relative mt-10">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-amber">Scoreboard en espera</p>
-              <h2 className="font-display mt-3 text-3xl font-semibold text-fg md:text-4xl">El podio está vacío. Todavía.</h2>
-              <p className="mx-auto mt-3 max-w-lg text-muted">Los primeros puntos se registran el {SANDBOX_CON.dateLabel}. Inscribe a tu equipo para aparecer aquí.</p>
-              <div className="mx-auto mt-8 max-w-md"><Countdown target={SANDBOX_CON.start} doneLabel="El CTF está en marcha" /></div>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-amber">Sin competencia activa</p>
+              <h2 className="font-display mt-3 text-3xl font-semibold text-fg md:text-4xl">El podio está vacío. Por ahora.</h2>
+              <p className="mx-auto mt-3 max-w-lg text-muted">El próximo CTF aún no tiene fecha. Cuando se anuncie, el scoreboard se activa aquí mismo.</p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Button href="/ctf/equipos" icon="arrow-right">Inscribir equipo</Button>
+                <Button href={SITE.whatsapp} variant="wa">Enterarme primero</Button>
                 <Button href="/ctf/archivo" variant="secondary">Ver CTFs anteriores</Button>
               </div>
             </div>

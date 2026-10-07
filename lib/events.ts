@@ -2,7 +2,9 @@ export type Speaker = { name: string; role: string; bio: string; img: string };
 export type Photo = { src: string; cap: string; cat: string; w: number; h: number };
 export type AgendaItem = { time: string; title: string; desc: string };
 export type Stat = { value: number; suffix?: string; label: string };
+export type Img = { src: string; alt: string; w: number; h: number };
 
+/* Edición presencial de V-SandBox (evento grande) */
 export type Edition = {
   kind: "edition";
   slug: string;
@@ -22,63 +24,36 @@ export type Edition = {
   agenda: AgendaItem[];
   speakers: Speaker[];
   photos: Photo[];
-  cover: { src: string; alt: string; w: number; h: number };
-  ctf?: { title: string; desc: string; phases: string[]; prizes?: string };
+  cover: Img;
+  ctf?: { title: string; desc: string; phases: string[]; prizes?: string; poster?: Img };
 };
 
-export type MainEvent = {
-  kind: "main";
+/* Meetup virtual o evento en comunidad (con aliados, o laboratorio práctico) */
+export type CommunityEvent = {
+  kind: "meetup" | "collab" | "lab";
   slug: string;
-  name: string;
-  codename: string;
-  start: string;
-  dateLabel: string;
-  venue: string;
-  address: string;
+  series: string; // "Virtual Meetup 04", "AWS Community Day"…
+  title: string;
+  start?: string;
+  dateLabel?: string;
+  timeLabel?: string;
+  mode: string;
+  venue?: string;
+  speaker?: string;
   summary: string;
-  lead: string;
-  cfp: { deadline: string; deadlineLabel: string; resultsLabel: string };
-  formats: { title: string; desc: string; icon: string }[];
-  ctf: { format: string; teams: string; categories: string[]; prizes: string };
-  cover: { src: string; alt: string; w: number; h: number };
+  body: string[];
+  highlights?: string[];
+  poster?: Img;
+  cover: Img;
+  photos: Photo[];
+  partners?: string[];
 };
 
-export type AnyEvent = Edition | MainEvent;
+export type AnyEvent = Edition | CommunityEvent;
 
 const E00 = "/eventos/edicion-00";
 const E01 = "/eventos/edicion-01";
 const FELIPE = `${E00}/speakers/felipe-grados.png`;
-
-export const SANDBOX_CON: MainEvent = {
-  kind: "main",
-  slug: "sandbox-con-2026",
-  name: "Sandbox-Con 2026",
-  codename: "Main Event",
-  start: "2026-11-08T09:00:00-05:00",
-  dateLabel: "08 de noviembre de 2026",
-  venue: "Casa de la Cultura",
-  address: "Quito, Ecuador",
-  summary: "El main event de la comunidad: charlas con demos en vivo, CTF por equipos y villages para tocar hardware real.",
-  lead: "Un día completo para romper, aprender y conectar con la escena de ciberseguridad de Ecuador.",
-  cfp: {
-    deadline: "2026-10-19T23:59:00-05:00",
-    deadlineLabel: "19 de octubre de 2026",
-    resultsLabel: "26 de octubre de 2026",
-  },
-  formats: [
-    { title: "Charlas técnicas", desc: "25 minutos + 5 de Q&A. Demos en vivo antes que slides.", icon: "mic" },
-    { title: "CTF por equipos", desc: "Jeopardy con retos de web, pwn, forense, OSINT y cripto.", icon: "flag" },
-    { title: "Villages", desc: "Lockpicking, hardware hacking, recon, blue team y más.", icon: "key" },
-    { title: "Networking", desc: "Reclutadores, mentores y la gente que hace la escena.", icon: "users" },
-  ],
-  ctf: {
-    format: "Jeopardy",
-    teams: "Equipos de 1 a 4 personas",
-    categories: ["Web", "Pwn", "Forense", "OSINT", "Crypto"],
-    prizes: "Premios, swag y trofeo para el podio",
-  },
-  cover: { src: "/foto-principal.jpg", alt: "La comunidad V-SandBox reunida tras la Edición 01", w: 2000, h: 1333 },
-};
 
 export const EDITIONS: Edition[] = [
   {
@@ -97,7 +72,7 @@ export const EDITIONS: Edition[] = [
     recap: [
       "La segunda edición de V-SandBox llegó al mítico Edificio CIESPAL, «La Casa de Tarzán», y la comunidad respondió. Un viernes por la tarde, el brutalismo quiteño se llenó de operadores listos para romper el siguiente nivel.",
       "Cinco charlas: hacking móvil con iOS, Android y Frida; el eslabón olvidado de SNMP a Domain Controller; la ruta de un HackTheBox Guru #1 de Ecuador; la nueva ley de ciberseguridad y su impacto en la profesión; y el cierre del fundador con privilege escalation.",
-      "En paralelo, la Operación CTF desplegó su infraestructura: un objetivo corporativo con exposición web, secretos mal guardados, el abuso del «Demonio Guardián» (MySQL/UDF) y una misión final para asegurar persistencia.",
+      "En paralelo, la Operación CTF «Pwn or Die» desplegó su infraestructura: un objetivo corporativo con exposición web, secretos mal guardados, el abuso del «Demonio Guardián» (MySQL/UDF) y una misión final para asegurar persistencia.",
     ],
     closing: "Access granted. Position secured. La comunidad sigue operando.",
     stats: [
@@ -140,10 +115,11 @@ export const EDITIONS: Edition[] = [
     ],
     cover: { src: `${E01}/gallery/evento01-02.jpeg`, alt: "Operación CTF en curso en el Edificio CIESPAL", w: 1358, h: 905 },
     ctf: {
-      title: "Operación CTF",
-      desc: "Un objetivo corporativo simulado, de la superficie web a la persistencia.",
+      title: "Pwn or Die",
+      desc: "La Operación CTF: un objetivo corporativo simulado, de la superficie web a la persistencia.",
+      poster: { src: `${E01}/pwn-or-die.jpg`, alt: "Afiche de OffSec × V-SandBox: premios para el Pwn or Die", w: 865, h: 812 },
       phases: ["Exposición web", "Secretos mal guardados", "El «Demonio Guardián» (MySQL/UDF)", "Persistencia"],
-      prizes: "Suscripciones a OffSec Proving Grounds y pases al RED LAB",
+      prizes: "3 suscripciones de 1 año a OffSec Proving Grounds Practice y pases al RED LAB",
     },
   },
   {
@@ -208,7 +184,173 @@ export const EDITIONS: Edition[] = [
   },
 ];
 
-export const EVENTS: AnyEvent[] = [SANDBOX_CON, ...EDITIONS];
+
+const M = "/eventos";
+
+export const MEETUPS: CommunityEvent[] = [
+  {
+    kind: "meetup",
+    slug: "meetup-04",
+    series: "Virtual Meetup 04",
+    title: "Herramientas de autogestión para la ingeniería social",
+    start: "2026-10-01T19:00:00-05:00",
+    dateLabel: "Jueves 1 de octubre de 2026",
+    timeLabel: "19:00 – 20:00",
+    mode: "Online",
+    speaker: "Jorge Sánchez Freire",
+    summary: "Cómo armar tu propio kit de ingeniería social: de los principios psicológicos a las herramientas de ataque.",
+    body: [
+      "Jorge Sánchez Freire recorrió los fundamentos de la ingeniería social (phishing, pretexting, baiting) y cómo construir un kit propio y autogestionado para ejercicios de concienciación y red team.",
+      "Hubo demos técnicas con USB Rubber Ducky, consulta de brechas con Have I Been Pwned y un espacio de preguntas con la comunidad.",
+    ],
+    highlights: ["Fundamentos de ingeniería social", "Demo con USB Rubber Ducky", "Have I Been Pwned", "Threat awareness"],
+    poster: { src: `${M}/meetup-04/poster.jpg`, alt: "Afiche del Virtual Meetup 04 con Jorge Sánchez Freire", w: 1000, h: 1000 },
+    cover: { src: `${M}/meetup-04/poster.jpg`, alt: "Afiche del Virtual Meetup 04", w: 1000, h: 1000 },
+    photos: [
+      { src: `${M}/meetup-04/recap.jpg`, cap: "Resumen oficial del Virtual Meetup 04", cat: "Recap", w: 1080, h: 1064 },
+      { src: `${M}/meetup-04/slide-rubber-ducky.jpg`, cap: "USB Rubber Ducky como herramienta de ataque", cat: "Charla", w: 1080, h: 1087 },
+      { src: `${M}/meetup-04/sesion-1.jpg`, cap: "El invitado explicando en vivo", cat: "Charla", w: 1080, h: 1060 },
+      { src: `${M}/meetup-04/sesion-2.jpg`, cap: "La comunidad conectada en la sesión", cat: "Comunidad", w: 1080, h: 1073 },
+    ],
+    partners: ["Vultaethel"],
+  },
+  {
+    kind: "meetup",
+    slug: "meetup-03",
+    series: "Virtual Meetup 03",
+    title: "Red Team: pentesting de LLMs y agentes IA",
+    start: "2026-08-06T19:00:00-05:00",
+    dateLabel: "Jueves 6 de agosto de 2026",
+    timeLabel: "19:00 – 20:00",
+    mode: "Online · Zoom",
+    speaker: "Said Zeidan",
+    summary: "Explorando el OWASP Top 10 para LLM: cómo se ataca y cómo se defiende una aplicación con IA.",
+    body: [
+      "Said Zeidan, especialista AppSec y ponente de la Edición 00, llevó al meetup el pentesting de modelos de lenguaje y agentes de IA, siguiendo el OWASP Top 10 para LLM.",
+    ],
+    highlights: ["OWASP Top 10 para LLM", "Agentes de IA", "Red Team"],
+    poster: { src: `${M}/meetup-03/poster.jpg`, alt: "Afiche del Virtual Meetup 03 con Said Zeidan", w: 1182, h: 1330 },
+    cover: { src: `${M}/meetup-03/poster.jpg`, alt: "Afiche del Virtual Meetup 03", w: 1182, h: 1330 },
+    photos: [],
+    partners: ["Vultaethel"],
+  },
+  {
+    kind: "meetup",
+    slug: "meetup-02",
+    series: "Virtual Meetup 02",
+    title: "Linux para principiantes",
+    start: "2026-07-16T18:00:00-05:00",
+    dateLabel: "Jueves 16 de julio de 2026",
+    timeLabel: "18:00 – 19:00",
+    mode: "Online · Zoom",
+    speaker: "Dax Navarrete",
+    summary: "Los fundamentos de Linux desde cero: aprende la terminal y domínala como un profesional.",
+    body: [
+      "Mini workshop semanal para quienes empiezan: Dax Navarrete enseñó los fundamentos de Linux y la línea de comandos, la base de cualquier camino en ciberseguridad.",
+    ],
+    highlights: ["Fundamentos de Linux", "La terminal", "Para principiantes"],
+    poster: { src: `${M}/meetup-02/poster.jpg`, alt: "Afiche del Virtual Meetup 02 con Dax Navarrete", w: 1254, h: 1254 },
+    cover: { src: `${M}/meetup-02/poster.jpg`, alt: "Afiche del Virtual Meetup 02", w: 1254, h: 1254 },
+    photos: [],
+    partners: ["Vultaethel"],
+  },
+  {
+    kind: "meetup",
+    slug: "meetup-01",
+    series: "Virtual Meetup 01",
+    title: "Hacking web en la era de la IA",
+    start: "2026-07-09T18:00:00-05:00",
+    dateLabel: "Jueves 9 de julio de 2026",
+    timeLabel: "18:00 – 19:00",
+    mode: "Online · Zoom",
+    speaker: "Jacob Pérez",
+    summary: "Cuando la inteligencia artificial democratiza el hacking y transforma la ciberseguridad.",
+    body: [
+      "El primer meetup virtual de la comunidad: Jacob Pérez, ponente de la Edición 00, mostró cómo la IA cambia el hacking web, tanto para atacar como para defender.",
+    ],
+    highlights: ["Hacking web", "IA y ciberseguridad", "Mini workshop"],
+    poster: { src: `${M}/meetup-01/poster.jpg`, alt: "Afiche del Virtual Meetup 01 con Jacob Pérez", w: 1422, h: 1600 },
+    cover: { src: `${M}/meetup-01/poster.jpg`, alt: "Afiche del Virtual Meetup 01", w: 1422, h: 1600 },
+    photos: [],
+    partners: ["Vultaethel"],
+  },
+];
+
+export const COLLABS: CommunityEvent[] = [
+  {
+    kind: "collab",
+    slug: "build-with-ai-gdg",
+    series: "Build with AI · GDG Quito",
+    title: "Apoyamos como comunidad a GDG Quito",
+    start: "2026-06-27T08:15:00-05:00",
+    dateLabel: "27 de junio de 2026",
+    mode: "Presencial",
+    venue: "Escuela Politécnica Nacional (EPN), Quito",
+    summary: "V-SandBox acompañó el Build with AI de GDG Quito en la EPN, junto a las ramas estudiantiles de IEEE.",
+    body: [
+      "Para el evento Build with AI, organizado por GDG Quito en la Escuela Politécnica Nacional, la comunidad se sumó para apoyar y conectar con estudiantes: charlas, talleres y almuerzo en comunidad.",
+      "Estuvimos acompañados por las ramas estudiantiles de IEEE Computer Society y Cibermind EPN.",
+    ],
+    highlights: ["Charlas y talleres", "Almuerzo en comunidad", "IEEE Computer Society", "Cibermind EPN"],
+    poster: { src: `${M}/build-with-ai-gdg/flyer.jpg`, alt: "Afiche: Vamos a apoyar como comunidad al evento de GDG", w: 1254, h: 1254 },
+    cover: { src: `${M}/build-with-ai-gdg/comunidad-epn.jpg`, alt: "La comunidad V-SandBox en la EPN", w: 865, h: 649 },
+    photos: [
+      { src: `${M}/build-with-ai-gdg/comunidad-epn.jpg`, cap: "La comunidad reunida en la EPN", cat: "Comunidad", w: 865, h: 649 },
+      { src: `${M}/build-with-ai-gdg/sala.jpg`, cap: "Sala del evento Build with AI", cat: "Evento", w: 1599, h: 899 },
+      { src: `${M}/build-with-ai-gdg/ieee-grupo.jpg`, cap: "IEEE Computer Society en la EPN", cat: "Comunidad", w: 2000, h: 1506 },
+      { src: `${M}/build-with-ai-gdg/ieee-anfiteatro.jpg`, cap: "Ramas IEEE en el anfiteatro", cat: "Comunidad", w: 2000, h: 1506 },
+    ],
+    partners: ["GDG Quito", "IEEE Computer Society", "Cibermind EPN"],
+  },
+  {
+    kind: "collab",
+    slug: "aws-community-day-2026",
+    series: "AWS Community Day Ecuador 2026",
+    title: "Nos fuimos al AWS Community Day",
+    dateLabel: "2026",
+    mode: "Presencial",
+    venue: "Cuenca, Ecuador",
+    summary: "Una delegación de la comunidad viajó al AWS Community Day Ecuador: misma pasión, nuevos horizontes.",
+    body: [
+      "La comunidad viajó en grupo al AWS Community Day Ecuador 2026 para aprender de la comunidad cloud, conocer gente nueva y representar a V-SandBox, junto a las ramas estudiantiles de IEEE.",
+    ],
+    highlights: ["Cloud y seguridad", "Networking", "Viaje en comunidad"],
+    poster: { src: `${M}/aws-community-day/flyer.jpg`, alt: "Afiche: Nos vamos al AWS Community Day Ecuador 2026", w: 1080, h: 1319 },
+    cover: { src: `${M}/aws-community-day/asistentes.jpg`, alt: "Asistentes al AWS Community Day", w: 1080, h: 685 },
+    photos: [
+      { src: `${M}/aws-community-day/asistentes.jpg`, cap: "Asistentes al AWS Community Day", cat: "Evento", w: 1080, h: 685 },
+      { src: `${M}/aws-community-day/cuenca.jpg`, cap: "La delegación en Cuenca", cat: "Comunidad", w: 1080, h: 792 },
+      { src: `${M}/aws-community-day/ieee.jpg`, cap: "IEEE UIDE con la comunidad", cat: "Comunidad", w: 1030, h: 716 },
+      { src: `${M}/aws-community-day/credenciales.jpg`, cap: "Credenciales de V-SandBox", cat: "Evento", w: 1080, h: 1334 },
+    ],
+    partners: ["AWS Community", "IEEE UIDE"],
+  },
+];
+
+export const LABS: CommunityEvent[] = [
+  {
+    kind: "lab",
+    slug: "red-lab",
+    series: "RED LAB",
+    title: "RED LAB: laboratorio práctico de Red Team",
+    mode: "Presencial",
+    summary: "Mesas de trabajo, laptops y máquinas vulnerables: una sesión práctica para atacar de verdad.",
+    body: [
+      "El RED LAB es el espacio más práctico de la comunidad: grupos pequeños, máquinas vulnerables y gente que te acompaña mientras explotas. Algunos pases al RED LAB fueron premio de la Operación CTF de la Edición 01.",
+    ],
+    highlights: ["Grupos pequeños", "Máquinas vulnerables", "Acompañamiento 1 a 1"],
+    cover: { src: `${M}/red-lab/mesa-1.jpg`, alt: "Equipo trabajando en el RED LAB", w: 1600, h: 1200 },
+    photos: [
+      { src: `${M}/red-lab/mesa-1.jpg`, cap: "Mesa de trabajo del RED LAB", cat: "Laboratorio", w: 1600, h: 1200 },
+      { src: `${M}/red-lab/panoramica-1.jpg`, cap: "Guiando la práctica en vivo", cat: "Laboratorio", w: 2000, h: 900 },
+      { src: `${M}/red-lab/panoramica-2.jpg`, cap: "Laptops, terminales y mucho café", cat: "Laboratorio", w: 2000, h: 900 },
+      { src: `${M}/red-lab/equipo.jpg`, cap: "El equipo del RED LAB", cat: "Comunidad", w: 1079, h: 669 },
+    ],
+  },
+];
+
+export const COMMUNITY_EVENTS: CommunityEvent[] = [...MEETUPS, ...COLLABS, ...LABS];
+export const EVENTS: AnyEvent[] = [...EDITIONS, ...COMMUNITY_EVENTS];
 
 export function getEvent(slug: string) {
   return EVENTS.find((e) => e.slug === slug);
@@ -228,8 +370,9 @@ export function allSpeakers() {
 }
 
 export const COMMUNITY_STATS = {
+  events: EVENTS.length,
   editions: EDITIONS.length,
+  meetups: MEETUPS.length,
   speakers: allSpeakers().length,
-  ctfs: EDITIONS.filter((e) => e.ctf).length,
   peakAttendance: 100,
 };

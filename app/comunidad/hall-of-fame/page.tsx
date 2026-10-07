@@ -19,7 +19,7 @@ export default function HallOfFame() {
         title="Hall of Fame"
         lead={`${speakers.length} personas han compartido su conocimiento en el escenario de V-SandBox. Este muro es para ellas.`}
         crumbs={[{ label: "Comunidad", href: "/comunidad" }, { label: "Hall of Fame", href: "/comunidad/hall-of-fame" }]}
-        actions={<Button href="/cfp" icon="arrow-right">Quiero estar en este muro</Button>}
+        actions={<Button href="/cfp" icon="arrow-right">Quiero dar una charla</Button>}
       />
       <Section>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

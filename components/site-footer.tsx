@@ -8,10 +8,10 @@ const COLUMNS: { title: string; links: [string, string][] }[] = [
     title: "Eventos",
     links: [
       ["Todos los eventos", "/eventos"],
-      ["Sandbox-Con 2026", "/eventos/sandbox-con-2026"],
       ["Edición 01", "/eventos/edicion-01"],
       ["Edición 00", "/eventos/edicion-00"],
-      ["Call for Papers", "/cfp"],
+      ["Meetups virtuales", "/eventos#meetups"],
+      ["Proponer una charla", "/cfp"],
     ],
   },
   {

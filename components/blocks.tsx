@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PARTNERS, SITE } from "@/lib/site";
-import type { Edition, Speaker } from "@/lib/events";
+import type { CommunityEvent, Edition, Speaker } from "@/lib/events";
 import { Icon } from "./icon";
 import { Button, Chip, Container, Eyebrow } from "./ui";
 import { Reveal } from "./fx";
@@ -91,6 +91,43 @@ export function EditionCard({ ed, priority = false }: { ed: Edition; priority?: 
         <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-2">
           Ver recap completo <Icon name="arrow-right" size={16} className="transition-transform group-hover:translate-x-1" />
         </span>
+      </div>
+    </Link>
+  );
+}
+
+const KIND_LABEL: Record<CommunityEvent["kind"], string> = { meetup: "Meetup virtual", collab: "En comunidad", lab: "Laboratorio" };
+
+/* Tarjeta de meetup, evento con aliados o laboratorio */
+export function CommunityEventCard({ ev, priority = false }: { ev: CommunityEvent; priority?: boolean }) {
+  // Los afiches se muestran enteros (su proporción real); las fotos, recortadas a 16:10
+  const isPoster = !!ev.poster && ev.cover.src === ev.poster.src;
+  return (
+    <Link href={`/eventos/${ev.slug}`} className="card card-hover spotlight group flex h-full flex-col overflow-hidden">
+      <div
+        className="relative overflow-hidden rounded-t-[19px] bg-surface"
+        style={{ aspectRatio: isPoster ? `${ev.cover.w}/${ev.cover.h}` : "16/10" }}
+      >
+        <Image
+          src={ev.cover.src}
+          alt={ev.cover.alt}
+          fill
+          priority={priority}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 380px"
+          className="object-cover transition duration-700 group-hover:scale-[1.03]"
+        />
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex flex-wrap gap-2">
+          <Chip tone={ev.kind === "meetup" ? "brand" : "default"}>{KIND_LABEL[ev.kind]}</Chip>
+        </div>
+        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-2">{ev.series}</p>
+        <h3 className="font-display mt-2 text-xl font-semibold leading-snug text-fg">{ev.title}</h3>
+        <p className="mt-2 flex-1 text-sm text-muted">{ev.summary}</p>
+        <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.1em] text-dim">
+          {ev.dateLabel && <span className="inline-flex items-center gap-1.5"><Icon name="calendar" size={13} /> {ev.dateLabel.replace(/^\p{L}+ (?=\d)/u, "")}</span>}
+          <span className="inline-flex items-center gap-1.5"><Icon name={ev.mode.startsWith("Online") ? "globe" : "pin"} size={13} /> {ev.mode}</span>
+        </p>
       </div>
     </Link>
   );

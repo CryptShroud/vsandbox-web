@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
-import { EDITIONS, SANDBOX_CON, allSpeakers, COMMUNITY_STATS } from "@/lib/events";
-import { BeforeAfter, Countdown, CountUp, HackConsole, Reveal, Tilt } from "@/components/fx";
+import { COLLABS, COMMUNITY_STATS, EDITIONS, MEETUPS, allSpeakers } from "@/lib/events";
+import { CountUp, HackConsole, Reveal, Tilt } from "@/components/fx";
 import { Button, Card, Chip, Container, Eyebrow, IconBadge, Section, SectionHeading, StatBlock } from "@/components/ui";
-import { EditionCard, JoinCta, PartnersStrip } from "@/components/blocks";
+import { CommunityEventCard, EditionCard, JoinCta, PartnersStrip } from "@/components/blocks";
 import { Icon } from "@/components/icon";
 import { LogoMark } from "@/components/logo";
 
@@ -14,19 +14,22 @@ export const metadata: Metadata = {
 };
 
 const PILLARS = [
-  { icon: "mic", title: "Conferencias", desc: "Ediciones con charlas técnicas, demos en vivo y ponentes que trabajan en la trinchera.", href: "/eventos" },
-  { icon: "flag", title: "CTF", desc: "Competencias Capture The Flag por equipos, con infraestructura propia y premios reales.", href: "/ctf" },
-  { icon: "key", title: "Villages", desc: "Zonas prácticas de lockpicking, hardware, OSINT y blue team. Se aprende con las manos.", href: "/villages" },
-  { icon: "users", title: "Comunidad", desc: "Mentoría, ofertas de trabajo, writeups y gente con la que romper cosas todo el año.", href: "/comunidad" },
+  { icon: "mic", title: "Conferencias", desc: "Ediciones con charlas técnicas, demos en vivo y ponentes que trabajan en la trinchera.", href: "/eventos#ediciones" },
+  { icon: "globe", title: "Meetups virtuales", desc: "Mini workshops y charlas por Zoom con invitados de la comunidad. Gratis y para todos los niveles.", href: "/eventos#meetups" },
+  { icon: "flag", title: "CTF", desc: "Competencias Capture The Flag por equipos, con infraestructura propia y premios de OffSec.", href: "/ctf" },
+  { icon: "key", title: "Villages y labs", desc: "Zonas prácticas de lockpicking, hardware, OSINT y el RED LAB. Se aprende con las manos.", href: "/villages" },
 ];
+
+const LATEST = [MEETUPS[0], MEETUPS[1], COLLABS[0], COLLABS[1]];
 
 export default function Home() {
   const speakers = allSpeakers();
+  const pwn = EDITIONS[0].ctf!;
   const heroStats = [
-    { to: COMMUNITY_STATS.editions, suffix: "", label: "Ediciones" },
+    { to: COMMUNITY_STATS.events, suffix: "", label: "Eventos" },
     { to: COMMUNITY_STATS.peakAttendance, suffix: "+", label: "Hackers en una noche" },
-    { to: COMMUNITY_STATS.speakers, suffix: "", label: "Ponentes" },
-    { to: COMMUNITY_STATS.ctfs, suffix: "", label: "CTFs en vivo" },
+    { to: COMMUNITY_STATS.editions, suffix: "", label: "Ediciones" },
+    { to: COMMUNITY_STATS.meetups, suffix: "", label: "Meetups virtuales" },
   ];
 
   return (
@@ -37,37 +40,33 @@ export default function Home() {
         <div className="orb -top-48 left-[10%] h-[520px] w-[520px] bg-brand/25" aria-hidden />
         <div className="orb top-20 right-[-10%] h-[480px] w-[480px] bg-violet/20" aria-hidden />
 
-        <Container className="relative grid items-center gap-14 pb-20 pt-16 md:pb-28 md:pt-24 lg:grid-cols-12">
-          <div className="lg:col-span-7">
+        <Container className="relative grid items-center gap-14 pb-20 pt-16 md:pb-28 md:pt-24 lg:grid-cols-2">
+          <div>
             <div className="enter">
               <Link
-                href={`/eventos/${SANDBOX_CON.slug}`}
+                href="/eventos"
                 className="group inline-flex items-center gap-3 rounded-full border border-line bg-white/[0.04] py-1.5 pl-1.5 pr-4 text-sm text-muted backdrop-blur transition-colors hover:border-brand/40 hover:text-fg"
               >
-                <span className="rounded-full bg-brand px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white">Próximo</span>
-                <BeforeAfter
-                  date={SANDBOX_CON.cfp.deadline}
-                  before={<span>Sandbox-Con 2026 · CFP abierto hasta el 19 de octubre</span>}
-                  after={<span>Sandbox-Con 2026 · 08 de noviembre · Quito</span>}
-                />
+                <span className="rounded-full bg-brand px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white">Comunidad activa</span>
+                <span>Próximos eventos por anunciar</span>
                 <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
 
             <div className="enter" style={{ animationDelay: "80ms" }}>
-              <h1 className="font-display mt-8 text-[3.2rem] font-semibold leading-[0.95] text-fg sm:text-7xl lg:text-[5.6rem]">
+              <h1 className="font-display mt-8 text-[3.2rem] font-semibold leading-[0.95] text-fg sm:text-7xl lg:text-[4.4rem] xl:text-[5.2rem]">
                 La comunidad <span className="text-gradient">hacker</span> de Quito.
               </h1>
             </div>
             <div className="enter" style={{ animationDelay: "160ms" }}>
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
-                Conferencias, CTFs, villages y meetups de ciberseguridad. De hackers para hackers: abierta, gratuita y hecha en Ecuador.
+                Conferencias, CTFs, meetups virtuales y villages de ciberseguridad. De hackers para hackers: abierta, gratuita y hecha en Ecuador.
               </p>
             </div>
             <div className="enter" style={{ animationDelay: "240ms" }}>
               <div className="mt-10 flex flex-wrap gap-3">
                 <Button href={SITE.whatsapp} variant="wa" size="lg">Unirme a la comunidad</Button>
-                <Button href={`/eventos/${SANDBOX_CON.slug}`} variant="secondary" size="lg" icon="arrow-right">Ver Sandbox-Con</Button>
+                <Button href="/eventos" variant="secondary" size="lg" icon="arrow-right">Ver eventos</Button>
               </div>
             </div>
             <div className="enter" style={{ animationDelay: "320ms" }}>
@@ -84,103 +83,69 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="lg:col-span-5">
-            <div className="enter" style={{ animationDelay: "200ms" }}>
-              <Tilt max={4}>
-                <div className="relative">
-                  <div className="absolute -inset-6 rounded-[40px] bg-gradient-to-br from-brand/30 via-transparent to-violet/30 blur-2xl" aria-hidden />
-                  <div className="card relative overflow-hidden p-2">
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] sm:aspect-[4/4.2]">
-                      <Image
-                        src="/foto-principal.jpg"
-                        alt="La comunidad V-SandBox reunida en la Edición 01, en el CIESPAL"
-                        fill
-                        priority
-                        sizes="(max-width: 1024px) 100vw, 480px"
-                        className="object-cover object-[45%_35%]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
-                        <div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-2">Edición 01 · CIESPAL</p>
-                          <p className="font-display mt-1 text-lg font-semibold text-white">La comunidad completa</p>
-                        </div>
-                        <LogoMark size={40} />
-                      </div>
+          <div className="enter" style={{ animationDelay: "200ms" }}>
+            <Tilt max={3}>
+              <div className="relative">
+                <div className="absolute -inset-6 rounded-[40px] bg-gradient-to-br from-brand/30 via-transparent to-violet/30 blur-2xl" aria-hidden />
+                <figure className="card relative overflow-hidden p-2">
+                  {/* Foto completa en su proporción original (2000×1333): sin recortes ni capas encima */}
+                  <Image
+                    src="/foto-principal.jpg"
+                    alt="La comunidad V-SandBox reunida en la Edición 01, en el CIESPAL: más de cuarenta personas posando con los banners de OffSec, IEEE y Vultaethel"
+                    width={2000}
+                    height={1333}
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 600px"
+                    className="h-auto w-full rounded-[14px]"
+                  />
+                  <figcaption className="flex items-center justify-between gap-4 px-4 pb-3 pt-4">
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-2">Edición 01 · CIESPAL · Quito</p>
+                      <p className="font-display mt-1 text-lg font-semibold text-fg">La comunidad completa</p>
                     </div>
-                  </div>
-
-                  <div className="float-y absolute -left-4 top-8 hidden rounded-2xl border border-line bg-bg/90 px-4 py-3 shadow-2xl backdrop-blur sm:block">
-                    <p className="font-mono text-[11px] text-[#4ade80]">root@vsandbox:~# id</p>
-                    <p className="font-mono text-[11px] text-muted">uid=0(root) gid=0(root)</p>
-                  </div>
-                  <div className="absolute -bottom-5 right-4 flex items-center gap-3 rounded-2xl border border-line bg-bg/90 px-4 py-3 shadow-2xl backdrop-blur sm:right-8">
-                    <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-ok text-ok" />
-                    <p className="text-sm">
-                      <span className="font-semibold text-fg">08 NOV</span> <span className="text-muted">· Sandbox-Con</span>
-                    </p>
-                  </div>
-                </div>
-              </Tilt>
-            </div>
+                    <LogoMark size={40} />
+                  </figcaption>
+                </figure>
+              </div>
+            </Tilt>
           </div>
         </Container>
       </section>
 
       <PartnersStrip />
 
-      {/* ---------- MAIN EVENT ---------- */}
+      {/* ---------- LO ÚLTIMO ---------- */}
       <Section>
+        <SectionHeading
+          eyebrow="Actividad reciente"
+          title="Lo último en la comunidad"
+          lead="Meetups virtuales, eventos con aliados y laboratorios. Siempre está pasando algo."
+          action={<Button href="/eventos" variant="secondary" icon="arrow-right">Todos los eventos</Button>}
+        />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {LATEST.map((ev, i) => (
+            <Reveal key={ev.slug} delay={i * 80} className="h-full">
+              <CommunityEventCard ev={ev} />
+            </Reveal>
+          ))}
+        </div>
         <Reveal>
-          <div className="card beam noise relative overflow-hidden bg-surface">
-            <div className="absolute inset-0 bg-dots opacity-40" aria-hidden />
-            <div className="orb -right-20 -top-20 h-96 w-96 bg-brand/25" aria-hidden />
-            <div className="relative grid gap-12 p-6 sm:p-10 md:p-14 lg:grid-cols-2">
-              <div>
-                <div className="flex flex-wrap gap-2">
-                  <Chip tone="brand">Main event</Chip>
-                  <Chip>{SANDBOX_CON.dateLabel}</Chip>
-                </div>
-                <h2 className="font-display mt-6 text-4xl font-semibold leading-[1] text-fg md:text-6xl">
-                  Sandbox-Con <span className="text-metal">2026</span>
-                </h2>
-                <p className="mt-5 max-w-lg text-lg text-muted">{SANDBOX_CON.summary}</p>
-                <ul className="mt-8 space-y-3 text-muted">
-                  <li className="flex items-center gap-3"><Icon name="calendar" size={18} className="text-brand-2" /> {SANDBOX_CON.dateLabel} · 09:00</li>
-                  <li className="flex items-center gap-3"><Icon name="pin" size={18} className="text-brand-2" /> {SANDBOX_CON.venue}, {SANDBOX_CON.address}</li>
-                  <li className="flex items-center gap-3"><Icon name="ticket" size={18} className="text-brand-2" /> Registro y novedades en el grupo de la comunidad</li>
-                </ul>
-                <div className="mt-10 flex flex-wrap gap-3">
-                  <Button href={`/eventos/${SANDBOX_CON.slug}`} icon="arrow-right">Ver el evento</Button>
-                  <Button href="/cfp" variant="secondary">Proponer una charla</Button>
-                </div>
-              </div>
-              <div className="flex flex-col justify-center gap-8">
-                <div>
-                  <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-dim">Faltan</p>
-                  <Countdown target={SANDBOX_CON.start} />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {SANDBOX_CON.formats.map((f) => (
-                    <div key={f.title} className="rounded-2xl border border-line bg-black/30 p-4">
-                      <Icon name={f.icon} size={20} className="text-brand-2" />
-                      <p className="mt-3 font-semibold text-fg">{f.title}</p>
-                      <p className="mt-1 text-sm text-dim">{f.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-dashed border-brand/40 bg-brand/[0.05] p-6">
+            <p className="flex items-center gap-3 text-fg">
+              <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-brand text-brand" />
+              <span><strong>Próximos eventos:</strong> por anunciar. Se publican primero en el grupo.</span>
+            </p>
+            <Button href={SITE.whatsapp} variant="wa" size="sm">Enterarme primero</Button>
           </div>
         </Reveal>
       </Section>
 
       {/* ---------- PILARES ---------- */}
       <Section className="!pt-0">
-        <SectionHeading eyebrow="Qué hacemos" title={<>Todo lo que pasa en <span className="text-gradient whitespace-nowrap">V-SandBox</span></>} lead="Una comunidad que se encuentra en persona, compite en serio y comparte lo que aprende." />
+        <SectionHeading eyebrow="Qué hacemos" title={<>Todo lo que pasa en <span className="text-gradient whitespace-nowrap">V-SandBox</span></>} lead="Una comunidad que se encuentra en persona y en línea, compite en serio y comparte lo que aprende." />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {PILLARS.map((p, i) => (
-            <Reveal key={p.title} delay={i * 80}>
+            <Reveal key={p.title} delay={i * 80} className="h-full">
               <Link href={p.href} className="card card-hover spotlight group flex h-full flex-col p-7">
                 <IconBadge name={p.icon} />
                 <h3 className="font-display mt-6 text-2xl font-semibold text-fg">{p.title}</h3>
@@ -194,11 +159,40 @@ export default function Home() {
         </div>
       </Section>
 
+      {/* ---------- PWN OR DIE × OFFSEC ---------- */}
+      <Section className="border-y border-line bg-bg-2/50">
+        <Reveal>
+          <div className="card beam noise relative grid items-center gap-10 overflow-hidden bg-surface p-7 md:p-12 lg:grid-cols-[1.1fr_1fr]">
+            <div className="orb -left-20 -top-20 h-80 w-80 bg-violet/25" aria-hidden />
+            <div className="relative">
+              <div className="flex flex-wrap gap-2">
+                <Chip tone="brand">CTF · Edición 01</Chip>
+                <Chip tone="ok">Premios OffSec</Chip>
+              </div>
+              <h2 className="font-display mt-5 text-4xl font-semibold leading-[1] text-fg md:text-6xl">
+                Pwn or <span className="text-gradient">Die</span>
+              </h2>
+              <p className="mt-5 max-w-lg text-lg text-muted">{pwn.desc} Un CTF de ~2 horas con premios de OffSec para los mejores equipos.</p>
+              <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 shrink-0 text-amber" /> {pwn.prizes}</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button href="/eventos/edicion-01#ctf" icon="arrow-right">Ver el CTF</Button>
+                <Button href="/ctf" variant="secondary">Cómo se juega</Button>
+              </div>
+            </div>
+            {pwn.poster && (
+              <div className="relative overflow-hidden rounded-2xl border border-line">
+                <Image src={pwn.poster.src} alt={pwn.poster.alt} width={pwn.poster.w} height={pwn.poster.h} sizes="(max-width: 1024px) 100vw, 480px" className="h-auto w-full" />
+              </div>
+            )}
+          </div>
+        </Reveal>
+      </Section>
+
       {/* ---------- EDICIONES ---------- */}
-      <Section className="border-t border-line bg-bg-2/50">
+      <Section>
         <SectionHeading
           eyebrow="Archivo"
-          title="Ediciones pasadas"
+          title="Ediciones presenciales"
           lead="Cada edición es una fase de la cadena de ataque. Revive las agendas, los ponentes y las galerías."
           action={<Button href="/eventos" variant="secondary" icon="arrow-right">Todos los eventos</Button>}
         />
@@ -212,7 +206,7 @@ export default function Home() {
       </Section>
 
       {/* ---------- PONENTES ---------- */}
-      <Section>
+      <Section className="border-t border-line bg-bg-2/50">
         <SectionHeading
           eyebrow="Lineup"
           title="Quiénes han subido al escenario"
@@ -238,14 +232,14 @@ export default function Home() {
                 <Icon name="mic" size={22} />
               </span>
               <p className="font-display mt-4 text-lg font-semibold text-fg">Tu charla aquí</p>
-              <p className="mt-1 text-xs text-muted">Call for Papers</p>
+              <p className="mt-1 text-xs text-muted">Propón un tema</p>
             </Link>
           </Reveal>
         </div>
       </Section>
 
       {/* ---------- CONSOLA ---------- */}
-      <Section className="border-y border-line bg-bg-2/50">
+      <Section className="border-y border-line">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
             <Eyebrow>Hands-on</Eyebrow>
@@ -279,7 +273,7 @@ export default function Home() {
                 Pon tu marca frente al talento de ciberseguridad de Ecuador.
               </h2>
               <p className="mt-6 max-w-xl text-lg text-muted">
-                Estudiantes, pentesters, analistas SOC y líderes técnicos en un mismo lugar. Patrocina una edición, un village o el CTF, y conecta con la comunidad que va a proteger tu industria.
+                Estudiantes, pentesters, analistas SOC y líderes técnicos en un mismo lugar. Patrocina una edición, un meetup o el CTF, y conecta con la comunidad que va a proteger tu industria.
               </p>
               <div className="mt-10 flex flex-wrap gap-3">
                 <Button href="/patrocinadores" icon="arrow-right">Ver paquetes</Button>
@@ -289,7 +283,7 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4 self-center">
               {[
                 ["100+", "Asistentes en la Edición 00"],
-                [String(COMMUNITY_STATS.speakers), "Ponentes técnicos"],
+                [String(COMMUNITY_STATS.events), "Eventos realizados"],
                 ["3", "Paquetes de patrocinio"],
                 ["100%", "Reinvertido en la comunidad"],
               ].map(([v, l]) => (

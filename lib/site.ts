@@ -44,5 +44,8 @@ export const PARTNERS: Partner[] = [
   { name: "OffSec", role: "Sponsor · Edición 01", url: "https://www.offsec.com" },
   { name: "IEEE ComSoc", role: "Aliado académico" },
   { name: "IEEE Computer Society UIDE", role: "Rama estudiantil" },
+  { name: "GDG Quito", role: "Build with AI" },
+  { name: "AWS Community", role: "Community Day" },
+  { name: "Cibermind EPN", role: "Aliado EPN" },
   { name: "CIESPAL", role: "Sede · Edición 01" },
 ];

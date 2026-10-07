@@ -19,8 +19,8 @@ const STEPS: [string, string, string][] = [
 ];
 
 const NEXT = [
-  { href: "/eventos", title: "Eventos", desc: "Sandbox-Con, meetups y el archivo de ediciones.", icon: "calendar" },
-  { href: "/ctf", title: "CTF", desc: "Arma tu equipo y captura tu primera flag.", icon: "flag" },
+  { href: "/eventos", title: "Eventos", desc: "Meetups virtuales y el archivo de ediciones.", icon: "calendar" },
+  { href: "/ctf", title: "CTF", desc: "Aprende cómo se juega y prepárate para el próximo.", icon: "flag" },
   { href: "/villages", title: "Villages", desc: "Lockpicking, hardware y OSINT con tus manos.", icon: "key" },
 ];
 
