@@ -60,7 +60,7 @@ export default async function EventPage({ params }: PageProps<"/eventos/[slug]">
 }
 
 /* ================= Meetup / evento en comunidad / laboratorio ================= */
-const KIND_LABEL = { meetup: "Meetup virtual", collab: "En comunidad", lab: "Laboratorio" } as const;
+const KIND_LABEL = { meetup: "Meetup virtual", collab: "En comunidad", lab: "Laboratorio", ctf: "CTF" } as const;
 
 function CommunityView({ ev }: { ev: CommunityEvent }) {
   const meta: [string, string, string][] = [

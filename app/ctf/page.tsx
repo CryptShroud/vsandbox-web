@@ -2,7 +2,7 @@ import Link from "next/link";
 import { pageMeta } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 import Image from "next/image";
-import { EDITIONS } from "@/lib/events";
+import { CTFS } from "@/lib/events";
 import { Button, Card, Chip, IconBadge, PageHeader, Section, SectionHeading } from "@/components/ui";
 import { HackConsole, Reveal } from "@/components/fx";
 import { JoinCta } from "@/components/blocks";
@@ -21,7 +21,7 @@ const HUB = [
   { title: "Archivo", desc: "Los CTFs de ediciones anteriores.", href: "/ctf/archivo", icon: "book" },
 ];
 
-const PWN = EDITIONS.find((e) => e.slug === "edicion-01")!.ctf!;
+const PWN = CTFS[0];
 
 export default function Ctf() {
   return (
@@ -46,18 +46,13 @@ export default function Ctf() {
             <div className="relative">
               <div className="flex flex-wrap gap-2">
                 <Chip tone="brand">Último CTF</Chip>
-                <Chip>Edición 01</Chip>
+                <Chip>2026</Chip>
                 <Chip tone="ok">Con OffSec</Chip>
               </div>
-              <h2 className="font-display mt-5 text-5xl font-semibold text-fg md:text-6xl">{PWN.title}</h2>
-              <p className="mt-4 text-lg text-muted">{PWN.desc}</p>
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
-                {PWN.phases.map((p, i) => (
-                  <span key={p} className="inline-flex items-center gap-2"><span className="font-mono text-xs text-brand-2">0{i + 1}</span> {p}</span>
-                ))}
-              </div>
-              {PWN.prizes && <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 shrink-0 text-amber" /> {PWN.prizes}</p>}
-              <div className="mt-8"><Button href="/eventos/edicion-01#ctf" variant="secondary" icon="arrow-right">Ver la Edición 01</Button></div>
+              <h2 className="font-display mt-5 text-5xl font-semibold text-fg md:text-6xl">Pwn or Die</h2>
+              <p className="mt-4 text-lg text-muted">{PWN.summary}</p>
+              <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 shrink-0 text-amber" /> 3 suscripciones de 1 año a OffSec Proving Grounds Practice</p>
+              <div className="mt-8"><Button href={`/eventos/${PWN.slug}`} variant="secondary" icon="arrow-right">Ver el evento</Button></div>
             </div>
             {PWN.poster && (
               <div className="relative overflow-hidden rounded-2xl border border-line">

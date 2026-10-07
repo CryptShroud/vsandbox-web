@@ -1,6 +1,6 @@
 import { pageMeta } from "@/lib/seo";
 import { SITE } from "@/lib/site";
-import { COLLABS, COMMUNITY_STATS, EDITIONS, LABS, MEETUPS } from "@/lib/events";
+import { COLLABS, COMMUNITY_STATS, CTFS, EDITIONS, LABS, MEETUPS } from "@/lib/events";
 import { Button, PageHeader, Section, SectionHeading, StatBlock } from "@/components/ui";
 import { CommunityEventCard, EditionCard, JoinCta } from "@/components/blocks";
 import { Reveal } from "@/components/fx";
@@ -73,9 +73,9 @@ export default function Eventos() {
       </Section>
 
       <Section id="comunidad">
-        <SectionHeading eyebrow="Fuera de casa" title="En comunidad" lead="Eventos de aliados donde V-SandBox estuvo presente, y el laboratorio práctico de Red Team." />
+        <SectionHeading eyebrow="Fuera de casa" title="CTFs, aliados y labs" lead="Pwn or Die con OffSec, eventos de aliados donde V-SandBox estuvo presente y el laboratorio práctico de Red Team." />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {[...COLLABS, ...LABS].map((ev, i) => (
+          {[...CTFS, ...COLLABS, ...LABS].map((ev, i) => (
             <Reveal key={ev.slug} delay={(i % 3) * 70} className="h-full">
               <CommunityEventCard ev={ev} />
             </Reveal>

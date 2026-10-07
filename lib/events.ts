@@ -30,7 +30,7 @@ export type Edition = {
 
 /* Meetup virtual o evento en comunidad (con aliados, o laboratorio práctico) */
 export type CommunityEvent = {
-  kind: "meetup" | "collab" | "lab";
+  kind: "meetup" | "collab" | "lab" | "ctf";
   slug: string;
   series: string; // "Virtual Meetup 04", "AWS Community Day"…
   title: string;
@@ -72,7 +72,7 @@ export const EDITIONS: Edition[] = [
     recap: [
       "La segunda edición de V-SandBox llegó al mítico Edificio CIESPAL, «La Casa de Tarzán», y la comunidad respondió. Un viernes por la tarde, el brutalismo quiteño se llenó de operadores listos para romper el siguiente nivel.",
       "Cinco charlas: hacking móvil con iOS, Android y Frida; el eslabón olvidado de SNMP a Domain Controller; la ruta de un HackTheBox Guru #1 de Ecuador; la nueva ley de ciberseguridad y su impacto en la profesión; y el cierre del fundador con privilege escalation.",
-      "En paralelo, la Operación CTF «Pwn or Die» desplegó su infraestructura: un objetivo corporativo con exposición web, secretos mal guardados, el abuso del «Demonio Guardián» (MySQL/UDF) y una misión final para asegurar persistencia.",
+      "En paralelo, la Operación CTF desplegó su infraestructura: un objetivo corporativo con exposición web, secretos mal guardados, el abuso del «Demonio Guardián» (MySQL/UDF) y una misión final para asegurar persistencia.",
     ],
     closing: "Access granted. Position secured. La comunidad sigue operando.",
     stats: [
@@ -115,11 +115,10 @@ export const EDITIONS: Edition[] = [
     ],
     cover: { src: `${E01}/gallery/evento01-02.jpeg`, alt: "Operación CTF en curso en el Edificio CIESPAL", w: 1358, h: 905 },
     ctf: {
-      title: "Pwn or Die",
-      desc: "La Operación CTF: un objetivo corporativo simulado, de la superficie web a la persistencia.",
-      poster: { src: `${E01}/pwn-or-die.jpg`, alt: "Afiche de OffSec × V-SandBox: premios para el Pwn or Die", w: 865, h: 812 },
+      title: "Operación CTF",
+      desc: "Un objetivo corporativo simulado, de la superficie web a la persistencia.",
       phases: ["Exposición web", "Secretos mal guardados", "El «Demonio Guardián» (MySQL/UDF)", "Persistencia"],
-      prizes: "3 suscripciones de 1 año a OffSec Proving Grounds Practice y pases al RED LAB",
+      prizes: "Suscripciones a OffSec Proving Grounds y pases al RED LAB",
     },
   },
   {
@@ -289,18 +288,17 @@ export const COLLABS: CommunityEvent[] = [
     summary: "V-SandBox acompañó el Build with AI de GDG Quito en la EPN, junto a las ramas estudiantiles de IEEE.",
     body: [
       "Para el evento Build with AI, organizado por GDG Quito en la Escuela Politécnica Nacional, la comunidad se sumó para apoyar y conectar con estudiantes: charlas, talleres y almuerzo en comunidad.",
-      "Estuvimos acompañados por las ramas estudiantiles de IEEE Computer Society y Cibermind EPN.",
+      "Estuvimos acompañados por las ramas estudiantiles de IEEE Computer Society.",
     ],
-    highlights: ["Charlas y talleres", "Almuerzo en comunidad", "IEEE Computer Society", "Cibermind EPN"],
+    highlights: ["Charlas y talleres", "Almuerzo en comunidad", "IEEE Computer Society"],
     poster: { src: `${M}/build-with-ai-gdg/flyer.jpg`, alt: "Afiche: Vamos a apoyar como comunidad al evento de GDG", w: 1254, h: 1254 },
-    cover: { src: `${M}/build-with-ai-gdg/comunidad-epn.jpg`, alt: "La comunidad V-SandBox en la EPN", w: 865, h: 649 },
+    cover: { src: `${M}/build-with-ai-gdg/sala.jpg`, alt: "Sala del evento Build with AI de GDG Quito", w: 1599, h: 899 },
     photos: [
-      { src: `${M}/build-with-ai-gdg/comunidad-epn.jpg`, cap: "La comunidad reunida en la EPN", cat: "Comunidad", w: 865, h: 649 },
       { src: `${M}/build-with-ai-gdg/sala.jpg`, cap: "Sala del evento Build with AI", cat: "Evento", w: 1599, h: 899 },
       { src: `${M}/build-with-ai-gdg/ieee-grupo.jpg`, cap: "IEEE Computer Society en la EPN", cat: "Comunidad", w: 2000, h: 1506 },
       { src: `${M}/build-with-ai-gdg/ieee-anfiteatro.jpg`, cap: "Ramas IEEE en el anfiteatro", cat: "Comunidad", w: 2000, h: 1506 },
     ],
-    partners: ["GDG Quito", "IEEE Computer Society", "Cibermind EPN"],
+    partners: ["GDG Quito", "IEEE Computer Society"],
   },
   {
     kind: "collab",
@@ -327,6 +325,30 @@ export const COLLABS: CommunityEvent[] = [
   },
 ];
 
+export const CTFS: CommunityEvent[] = [
+  {
+    kind: "ctf",
+    slug: "pwn-or-die-2026",
+    series: "Pwn or Die 2026",
+    title: "Pwn or Die: el CTF de OffSec × V-SandBox",
+    dateLabel: "2026",
+    mode: "Presencial",
+    summary: "El CTF presencial con premios de OffSec: equipos, retos y la comunidad reunida en el salón.",
+    body: [
+      "Pwn or Die es el CTF de V-SandBox en alianza con OffSec: equipos compitiendo por resolver retos de explotación, en un salón lleno de gente de la comunidad y con la rama estudiantil Cibermind EPN presente.",
+      "Los mejores equipos se llevaron 3 suscripciones de 1 año a OffSec Proving Grounds Practice, la plataforma de laboratorios de OffSec.",
+    ],
+    highlights: ["CTF por equipos", "Premios OffSec", "Proving Grounds Practice", "Cibermind EPN"],
+    poster: { src: `${M}/pwn-or-die-2026/poster.jpg`, alt: "Afiche de OffSec × V-SandBox: premios para el Pwn or Die", w: 865, h: 812 },
+    cover: { src: `${M}/pwn-or-die-2026/comunidad.jpg`, alt: "La comunidad reunida en el Pwn or Die 2026, con los banners de OffSec y Cibermind EPN", w: 865, h: 649 },
+    photos: [
+      { src: `${M}/pwn-or-die-2026/comunidad.jpg`, cap: "La comunidad reunida en el Pwn or Die 2026", cat: "Comunidad", w: 865, h: 649 },
+      { src: `${M}/pwn-or-die-2026/poster.jpg`, cap: "Premios del Pwn or Die: 3 suscripciones a Proving Grounds Practice", cat: "Premios", w: 865, h: 812 },
+    ],
+    partners: ["OffSec", "Cibermind EPN", "Vultaethel"],
+  },
+];
+
 export const LABS: CommunityEvent[] = [
   {
     kind: "lab",
@@ -349,7 +371,7 @@ export const LABS: CommunityEvent[] = [
   },
 ];
 
-export const COMMUNITY_EVENTS: CommunityEvent[] = [...MEETUPS, ...COLLABS, ...LABS];
+export const COMMUNITY_EVENTS: CommunityEvent[] = [...MEETUPS, ...CTFS, ...COLLABS, ...LABS];
 export const EVENTS: AnyEvent[] = [...EDITIONS, ...COMMUNITY_EVENTS];
 
 export function getEvent(slug: string) {

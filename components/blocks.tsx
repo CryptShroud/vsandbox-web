@@ -96,7 +96,7 @@ export function EditionCard({ ed, priority = false }: { ed: Edition; priority?: 
   );
 }
 
-const KIND_LABEL: Record<CommunityEvent["kind"], string> = { meetup: "Meetup virtual", collab: "En comunidad", lab: "Laboratorio" };
+const KIND_LABEL: Record<CommunityEvent["kind"], string> = { meetup: "Meetup virtual", collab: "En comunidad", lab: "Laboratorio", ctf: "CTF" };
 
 /* Tarjeta de meetup, evento con aliados o laboratorio */
 export function CommunityEventCard({ ev, priority = false }: { ev: CommunityEvent; priority?: boolean }) {

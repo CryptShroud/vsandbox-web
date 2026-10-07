@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
-import { COLLABS, COMMUNITY_STATS, EDITIONS, MEETUPS, allSpeakers } from "@/lib/events";
+import { COLLABS, COMMUNITY_STATS, CTFS, EDITIONS, MEETUPS, allSpeakers } from "@/lib/events";
 import { CountUp, HackConsole, Reveal, Tilt } from "@/components/fx";
 import { Button, Card, Chip, Container, Eyebrow, IconBadge, Section, SectionHeading, StatBlock } from "@/components/ui";
 import { CommunityEventCard, EditionCard, JoinCta, PartnersStrip } from "@/components/blocks";
@@ -20,11 +20,11 @@ const PILLARS = [
   { icon: "key", title: "Villages y labs", desc: "Zonas prácticas de lockpicking, hardware, OSINT y el RED LAB. Se aprende con las manos.", href: "/villages" },
 ];
 
-const LATEST = [MEETUPS[0], MEETUPS[1], COLLABS[0], COLLABS[1]];
+const LATEST = [MEETUPS[0], CTFS[0], COLLABS[0], COLLABS[1]];
+const PWN = CTFS[0];
 
 export default function Home() {
   const speakers = allSpeakers();
-  const pwn = EDITIONS[0].ctf!;
   const heroStats = [
     { to: COMMUNITY_STATS.events, suffix: "", label: "Eventos" },
     { to: COMMUNITY_STATS.peakAttendance, suffix: "+", label: "Hackers en una noche" },
@@ -166,22 +166,22 @@ export default function Home() {
             <div className="orb -left-20 -top-20 h-80 w-80 bg-violet/25" aria-hidden />
             <div className="relative">
               <div className="flex flex-wrap gap-2">
-                <Chip tone="brand">CTF · Edición 01</Chip>
+                <Chip tone="brand">CTF 2026</Chip>
                 <Chip tone="ok">Premios OffSec</Chip>
               </div>
               <h2 className="font-display mt-5 text-4xl font-semibold leading-[1] text-fg md:text-6xl">
                 Pwn or <span className="text-gradient">Die</span>
               </h2>
-              <p className="mt-5 max-w-lg text-lg text-muted">{pwn.desc} Un CTF de ~2 horas con premios de OffSec para los mejores equipos.</p>
-              <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 shrink-0 text-amber" /> {pwn.prizes}</p>
+              <p className="mt-5 max-w-lg text-lg text-muted">{PWN.summary}</p>
+              <p className="mt-6 flex items-start gap-3 text-fg"><Icon name="trophy" size={20} className="mt-0.5 shrink-0 text-amber" /> 3 suscripciones de 1 año a OffSec Proving Grounds Practice</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Button href="/eventos/edicion-01#ctf" icon="arrow-right">Ver el CTF</Button>
+                <Button href={`/eventos/${PWN.slug}`} icon="arrow-right">Ver el evento</Button>
                 <Button href="/ctf" variant="secondary">Cómo se juega</Button>
               </div>
             </div>
-            {pwn.poster && (
+            {PWN.poster && (
               <div className="relative overflow-hidden rounded-2xl border border-line">
-                <Image src={pwn.poster.src} alt={pwn.poster.alt} width={pwn.poster.w} height={pwn.poster.h} sizes="(max-width: 1024px) 100vw, 480px" className="h-auto w-full" />
+                <Image src={PWN.poster.src} alt={PWN.poster.alt} width={PWN.poster.w} height={PWN.poster.h} sizes="(max-width: 1024px) 100vw, 480px" className="h-auto w-full" />
               </div>
             )}
           </div>
